@@ -21,7 +21,8 @@ const dictionary = {
 };
 
 export const App = () => {
-  const [companies, setCompanies] = useState<Companies>([]);
+  const [companiesByMA, setCompaniesByMA] = useState<Companies>([]);
+  const [companiesByLR, setCompaniesByLR] = useState<Companies>([]);
 
   const onChangeFile = async (file: File | null) => {
     if (!file) {
@@ -45,8 +46,7 @@ export const App = () => {
         key,
         JSON.parse(value as string)
       ]) as Companies;
-
-      setCompanies(convertedValues);
+      setCompaniesByMA(convertedValues);
     } catch (e) {
       e instanceof Error &&
         showNotification({
@@ -66,54 +66,70 @@ export const App = () => {
       />
       <Grid>
         <Grid.Col span={6}>
-          <Stack mt='md'>
-            <Text component='h3' size='lg' weight={500} className='text-center'>
-              Данные, спрогнозированы с помощью метода скользящей средней
-            </Text>
-            {companies?.map(([keyData, value]) => (
-              <Stack key={keyData} mt='lg'>
-                <div>
-                  В {value.year[Object.entries(value.year).length - 1]}{' '}
-                  прогнозируемые данные для компании{' '}
-                  <Text weight={500} component='span'>
-                    {keyData.toUpperCase()}:
-                  </Text>
-                </div>
-                <Table horizontalSpacing='xl'>
-                  <thead>
-                    <tr>
-                      {Object.entries(value).map(([key]) => (
-                        <th key={key}>
-                          {dictionary[key as keyof typeof dictionary]}
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      {Object.entries(value).map(([key, prop]) => {
-                        if (key === 'year') {
-                          return null;
-                        }
-                        const lastIndex = Object.keys(prop).length - 1;
+          {!!companiesByMA.length && (
+            <Stack mt='md'>
+              <Text
+                component='h3'
+                size='lg'
+                weight={500}
+                className='text-center'
+              >
+                Данные, спрогнозированы с помощью метода скользящей средней
+              </Text>
+              {companiesByMA.map(([keyData, value]) => (
+                <Stack key={keyData} mt='lg'>
+                  <div>
+                    В {value.year[Object.entries(value.year).length - 1]}{' '}
+                    прогнозируемые данные для компании{' '}
+                    <Text weight={500} component='span'>
+                      {keyData.toUpperCase()}:
+                    </Text>
+                  </div>
+                  <Table horizontalSpacing='xl'>
+                    <thead>
+                      <tr>
+                        {Object.entries(value).map(([key]) => (
+                          <th key={key}>
+                            {dictionary[key as keyof typeof dictionary]}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        {Object.entries(value).map(([key, prop]) => {
+                          if (key === 'year') {
+                            return null;
+                          }
+                          const lastIndex = Object.keys(prop).length - 1;
 
-                        return (
-                          <td key={key}>{formatCurrency(+prop[lastIndex])}</td>
-                        );
-                      })}
-                    </tr>
-                  </tbody>
-                </Table>
-              </Stack>
-            ))}
-          </Stack>
+                          return (
+                            <td key={key}>
+                              {formatCurrency(+prop[lastIndex])}
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    </tbody>
+                  </Table>
+                </Stack>
+              ))}
+            </Stack>
+          )}
         </Grid.Col>
         <Grid.Col span={6}>
-          <Stack mt='md'>
-            <Text component='h3' size='lg' weight={500} className='text-center'>
-              Данные, спрогнозированы с помощью линейной регрессии
-            </Text>
-          </Stack>
+          {!!companiesByLR.length && (
+            <Stack mt='md'>
+              <Text
+                component='h3'
+                size='lg'
+                weight={500}
+                className='text-center'
+              >
+                Данные, спрогнозированы с помощью линейной регрессии
+              </Text>
+            </Stack>
+          )}
         </Grid.Col>
       </Grid>
     </main>
