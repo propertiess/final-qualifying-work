@@ -1,5 +1,13 @@
 import { useState } from 'react';
-import { FileInput, Grid, Stack, Table, Text } from '@mantine/core';
+import {
+  FileInput,
+  Flex,
+  Grid,
+  Loader,
+  Stack,
+  Table,
+  Text
+} from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
 
 import { PredictService } from './services/predict.service';
@@ -25,6 +33,7 @@ const dictionary = {
 
 export const App = () => {
   const [companiesByMA, setCompaniesByMA] = useState<Companies | null>(null);
+  const [isLoadingCompaniesByMA, setIsLoadingCompaniesByMA] = useState(false);
   const [companiesByLR, setCompaniesByLR] = useState<Companies | null>(null);
 
   const onChangeFile = async (file: File | null) => {
@@ -43,6 +52,7 @@ export const App = () => {
     const data = new FormData();
     data.append('file', file);
 
+    setIsLoadingCompaniesByMA(true);
     try {
       const values = await PredictService.getPredictByMovingAverage(data);
       setCompaniesByMA(values);
@@ -53,6 +63,7 @@ export const App = () => {
           message: e.message
         });
     }
+    setIsLoadingCompaniesByMA(false);
   };
 
   return (
@@ -65,6 +76,11 @@ export const App = () => {
       />
       <Grid>
         <Grid.Col span={6}>
+          {isLoadingCompaniesByMA && (
+            <Flex justify='center' mt='xl'>
+              <Loader />
+            </Flex>
+          )}
           {companiesByMA && (
             <Stack mt='md'>
               <Text
