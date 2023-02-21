@@ -2,17 +2,15 @@ import sys
 import pandas as pd
 
 
-def get_predict_by_moving_average(path):
-  xl = pd.ExcelFile(path)
+def get_predict_by_moving_average(file):
+  xl = pd.ExcelFile(file)
 
   sheet_names = xl.sheet_names
 
   sheets = {}
 
   for i in range(0,len(sheet_names)):
-      data = pd.read_excel(path, sheet_name=i)
-      # if i == 0:
-      #   data.to_csv(f'{sheet_names[i]}.csv', index=False)
+      data = pd.read_excel(file, sheet_name=i)
       sheets[sheet_names[i]] = data
 
 
