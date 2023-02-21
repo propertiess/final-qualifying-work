@@ -1,5 +1,9 @@
+import os
+import sys
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+
+sys.path.insert(1, os.path.join(sys.path[0], '../utils'))
 
 import get_predict_by_moving_average
 
