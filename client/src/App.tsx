@@ -5,14 +5,17 @@ import { showNotification } from '@mantine/notifications';
 import { PredictService } from './services/predict.service';
 import { formatCurrency } from './utils/helpers/formatCurrency';
 
-type Company = {
-  profit: Record<number, string>;
-  net_profit: Record<number, string>;
-  net_loss: Record<number, string>;
-  year: Record<number, number>;
+type Indicators = {
+  profit: number;
+  net_profit: number;
+  net_loss: number;
 };
 
-type Companies = [string, Company][];
+export type Companies = {
+  [x: string]: Indicators;
+} & {
+  year: number;
+};
 
 const dictionary = {
   net_profit: 'Чистая прибыль, ₽',
@@ -21,8 +24,8 @@ const dictionary = {
 };
 
 export const App = () => {
-  const [companiesByMA, setCompaniesByMA] = useState<Companies>([]);
-  const [companiesByLR, setCompaniesByLR] = useState<Companies>([]);
+  const [companiesByMA, setCompaniesByMA] = useState<Companies | null>(null);
+  const [companiesByLR, setCompaniesByLR] = useState<Companies | null>(null);
 
   const onChangeFile = async (file: File | null) => {
     if (!file) {
@@ -42,11 +45,7 @@ export const App = () => {
 
     try {
       const values = await PredictService.getPredictByMovingAverage(data);
-      const convertedValues = Object.entries(values).map(([key, value]) => [
-        key,
-        JSON.parse(value as string)
-      ]) as Companies;
-      setCompaniesByMA(convertedValues);
+      setCompaniesByMA(values);
     } catch (e) {
       e instanceof Error &&
         showNotification({
@@ -66,7 +65,7 @@ export const App = () => {
       />
       <Grid>
         <Grid.Col span={6}>
-          {!!companiesByMA.length && (
+          {companiesByMA && (
             <Stack mt='md'>
               <Text
                 component='h3'
@@ -76,49 +75,49 @@ export const App = () => {
               >
                 Данные, спрогнозированы с помощью метода скользящей средней
               </Text>
-              {companiesByMA.map(([keyData, value]) => (
-                <Stack key={keyData} mt='lg'>
-                  <div>
-                    В {value.year[Object.entries(value.year).length - 1] + 1}{' '}
-                    прогнозируемые данные для компании{' '}
-                    <Text weight={500} component='span'>
-                      {keyData.toUpperCase()}:
-                    </Text>
-                  </div>
-                  <Table horizontalSpacing='xl'>
-                    <thead>
-                      <tr>
-                        {Object.entries(value).map(([key]) => (
-                          <th key={key}>
-                            {dictionary[key as keyof typeof dictionary]}
-                          </th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        {Object.entries(value).map(([key, prop]) => {
-                          if (key === 'year') {
-                            return null;
-                          }
-                          const lastIndex = Object.keys(prop).length - 1;
-
-                          return (
-                            <td key={key}>
-                              {formatCurrency(+prop[lastIndex])}
-                            </td>
-                          );
-                        })}
-                      </tr>
-                    </tbody>
-                  </Table>
-                </Stack>
-              ))}
+              {Object.entries(companiesByMA).map(([company, indicators]) => {
+                if (company.match(/year/)) {
+                  return (
+                    <div key={company}>
+                      Прогнозируемые данные для компании в {companiesByMA.year}
+                    </div>
+                  );
+                }
+                return (
+                  <Stack key={company} mt='lg'>
+                    <div>
+                      <Text weight={500} component='span'>
+                        {company.toUpperCase()}:
+                      </Text>
+                    </div>
+                    <Table horizontalSpacing='xl'>
+                      <thead>
+                        <tr>
+                          {Object.entries(indicators).map(([indicator]) => (
+                            <th key={indicator}>
+                              {dictionary[indicator as keyof typeof dictionary]}
+                            </th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          {Object.entries(indicators).map(
+                            ([indicator, val]) => (
+                              <td key={indicator}>{formatCurrency(val)}</td>
+                            )
+                          )}
+                        </tr>
+                      </tbody>
+                    </Table>
+                  </Stack>
+                );
+              })}
             </Stack>
           )}
         </Grid.Col>
         <Grid.Col span={6}>
-          {!!companiesByLR.length && (
+          {companiesByLR && (
             <Stack mt='md'>
               <Text
                 component='h3'
