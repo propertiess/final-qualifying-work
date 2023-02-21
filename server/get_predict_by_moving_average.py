@@ -22,7 +22,7 @@ def get_predict_by_moving_average(file):
 
   years = []
 
-  for i in range(0, 12):
+  for i in range(0, len(sheets[sheet_names[0]]['profit'])):
     years.append(2011 + i)
 
   n = 3

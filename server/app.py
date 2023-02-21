@@ -9,6 +9,10 @@ CORS(app)
 @app.route('/predict', methods=['POST'])
 def predict():
   data = request.files['file']
+
+  # get query
+  print(request.args.get('type'))
+  
   response = get_predict_by_moving_average(data)
 
   json_response = {}
@@ -16,4 +20,3 @@ def predict():
     json_response[key] = value.to_json()
     
   return jsonify(json_response)
-

@@ -79,7 +79,7 @@ export const App = () => {
               {companiesByMA.map(([keyData, value]) => (
                 <Stack key={keyData} mt='lg'>
                   <div>
-                    В {value.year[Object.entries(value.year).length - 1]}{' '}
+                    В {value.year[Object.entries(value.year).length - 1] + 1}{' '}
                     прогнозируемые данные для компании{' '}
                     <Text weight={500} component='span'>
                       {keyData.toUpperCase()}:
