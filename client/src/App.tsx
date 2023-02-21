@@ -59,7 +59,7 @@ export const App = () => {
   return (
     <main className='p-10'>
       <FileInput
-        label='Загрузите dataset'
+        placeholder='Загрузить dataset'
         withAsterisk
         accept='.xlsx,.xls'
         onChange={file => onChangeFile(file)}
