@@ -2,10 +2,10 @@ import { useState } from 'react';
 import {
   FileInput,
   Flex,
-  Grid,
   Loader,
   Stack,
   Table,
+  Tabs,
   Text
 } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
@@ -74,8 +74,12 @@ export const App = () => {
         accept='.xlsx,.xls'
         onChange={file => onChangeFile(file)}
       />
-      <Grid>
-        <Grid.Col span={6}>
+      <Tabs defaultValue='ma' mt='lg'>
+        <Tabs.List>
+          <Tabs.Tab value='ma'>Метод скользящей средней</Tabs.Tab>
+          <Tabs.Tab value='lr'>Линейная регрессия</Tabs.Tab>
+        </Tabs.List>
+        <Tabs.Panel value='ma' className='px-10'>
           {isLoadingCompaniesByMA && (
             <Flex justify='center' mt='xl'>
               <Loader />
@@ -131,8 +135,8 @@ export const App = () => {
               })}
             </Stack>
           )}
-        </Grid.Col>
-        <Grid.Col span={6}>
+        </Tabs.Panel>
+        <Tabs.Panel value='lr'>
           {companiesByLR && (
             <Stack mt='md'>
               <Text
@@ -145,8 +149,8 @@ export const App = () => {
               </Text>
             </Stack>
           )}
-        </Grid.Col>
-      </Grid>
+        </Tabs.Panel>
+      </Tabs>
     </main>
   );
 };
