@@ -1,10 +1,10 @@
+import sys, os, json
 from flask import Flask, request
 from flask_cors import CORS
-import json
 
-import sys, os
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
-import get_predict_by_moving_average
+
+sys.path.insert(1, os.path.join(sys.path[0], '..'))
+from services.predict import get_predict_by_moving_average
 
 app = Flask(__name__)
 CORS(app)

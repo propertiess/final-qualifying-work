@@ -1,4 +1,3 @@
-import sys
 import pandas as pd
 
 
@@ -60,6 +59,3 @@ def get_predict_by_moving_average(file):
 
   # print(moving_averages)
   # print(pd.DataFrame(moving_averages[sheet_names[2]]).to_csv('ai-teko.csv'))
-
-
-sys.modules[__name__] = get_predict_by_moving_average
