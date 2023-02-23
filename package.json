@@ -1,0 +1,22 @@
+{
+  "name": "final-qualifying-work",
+  "version": "1.0.0",
+  "description": "mono-repository",
+  "scripts": {
+    "start": "run-p client server",
+    "client": "cd client && pnpm dev",
+    "server": "cd server/api && flask --app index --debug run",
+    "client-prod": "cd client && vercel --prod",
+    "server-prod": "cd server && vercel --prod"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/propertiess/final-qualifying-work.git"
+  },
+  "author": "propertiess",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/propertiess/final-qualifying-work/issues"
+  },
+  "homepage": "https://github.com/propertiess/final-qualifying-work#readme"
+}
