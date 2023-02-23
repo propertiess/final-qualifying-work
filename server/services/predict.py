@@ -1,5 +1,7 @@
 import pandas as pd
 
+from utils.format_num import format_num
+
 
 def get_predict_by_moving_average(file):
   xl = pd.ExcelFile(file)
@@ -12,22 +14,16 @@ def get_predict_by_moving_average(file):
       data = pd.read_excel(file, sheet_name=i)
       sheets[sheet_names[i]] = data
 
-
-  def format_num(x):
-      return "{:.2f}".format(x)
-
   columns = ['profit', 'net_profit', 'net_loss']
 
 
   years = []
-
   for i in range(0, len(sheets[sheet_names[0]]['profit'])):
     years.append(2011 + i)
 
-  n = 3
-
 
   moving_averages = {}
+  n = 3
 
   for i in range(0,len(sheet_names)):
     frame = pd.DataFrame(sheets[sheet_names[i]])
@@ -38,13 +34,11 @@ def get_predict_by_moving_average(file):
 
 
   result = {}
-
   result['year'] = sheets[sheet_names[0]]['year'][len(moving_averages[sheet_names[0]]) - 1] + 1
 
   for company in moving_averages:
     length = len(moving_averages[company])
     result[company] = {}
-
 
     for i in range(0, len(columns)):
       values = moving_averages[company][columns[i]]
