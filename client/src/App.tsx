@@ -1,4 +1,7 @@
 import { useState } from 'react';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import { EChart } from '@hcorta/react-echarts';
 import {
   FileInput,
   Flex,
@@ -30,6 +33,26 @@ const dictionary = {
   profit: 'Выручка, ₽',
   net_loss: 'Чистый убыток, ₽'
 };
+
+const mockChartData: [string, unknown[], unknown[]][] = [
+  [
+    'АО Ланит',
+    [
+      ['2011', 14637808000],
+      ['2012', 16271000000],
+      ['2013', 13361000000],
+      ['2014', 11567065000],
+      ['2015', 13230771000]
+    ],
+    [
+      ['2011', 0],
+      ['2012', 0],
+      ['2013', 14756602666.67],
+      ['2014', 13733021666.67],
+      ['2015', 12719612000.0]
+    ]
+  ]
+];
 
 export const App = () => {
   const [companiesByMA, setCompaniesByMA] = useState<Companies | null>(null);
@@ -68,6 +91,32 @@ export const App = () => {
 
   return (
     <main className='p-10'>
+      {mockChartData.map(([company, data, ma]) => (
+        <div className='w-[60rem]' key={company}>
+          <EChart
+            xAxis={{
+              type: 'category'
+            }}
+            title={{
+              text: company
+            }}
+            tooltip={{
+              show: true
+            }}
+            yAxis={{}}
+            series={[
+              {
+                type: 'line',
+                data
+              },
+              {
+                type: 'line',
+                data: ma
+              }
+            ]}
+          />
+        </div>
+      ))}
       <FileInput
         placeholder='Загрузить dataset'
         withAsterisk
