@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import {
+  Center,
   FileInput,
   Flex,
   Loader,
@@ -10,6 +11,7 @@ import {
 } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
 
+import { TableWrap } from './components/TableWrap';
 import { PredictService } from './services/predict.service';
 import { formatCurrency } from './utils/helpers/formatCurrency';
 
@@ -79,35 +81,27 @@ export const App = () => {
           <Tabs.Tab value='ma'>Метод скользящей средней</Tabs.Tab>
           <Tabs.Tab value='lr'>Линейная регрессия</Tabs.Tab>
         </Tabs.List>
-        <Tabs.Panel value='ma' className='px-10'>
+        <Tabs.Panel value='ma'>
           {isLoadingCompaniesByMA && (
-            <Flex justify='center' mt='xl'>
+            <Center mt='xl'>
               <Loader />
-            </Flex>
+            </Center>
           )}
           {companiesByMA && (
-            <Stack mt='md'>
-              <Text
-                component='h3'
-                size='lg'
-                weight={500}
-                className='text-center'
-              >
-                Данные, спрогнозированы с помощью метода скользящей средней
-              </Text>
+            <TableWrap title='Данные, спрогнозированы с помощью метода скользящей средней'>
               {Object.entries(companiesByMA).map(([company, indicators]) => {
                 if (company.match(/year/)) {
                   return (
-                    <div key={company}>
+                    <h4 key={company}>
                       Прогнозируемые данные для компании в {companiesByMA.year}
-                    </div>
+                    </h4>
                   );
                 }
                 return (
                   <Stack key={company} mt='lg'>
                     <div>
                       <Text weight={500} component='span'>
-                        {company.toUpperCase()}:
+                        Компания {company.toUpperCase()}
                       </Text>
                     </div>
                     <Table horizontalSpacing='xl'>
@@ -133,21 +127,12 @@ export const App = () => {
                   </Stack>
                 );
               })}
-            </Stack>
+            </TableWrap>
           )}
         </Tabs.Panel>
         <Tabs.Panel value='lr'>
           {companiesByLR && (
-            <Stack mt='md'>
-              <Text
-                component='h3'
-                size='lg'
-                weight={500}
-                className='text-center'
-              >
-                Данные, спрогнозированы с помощью линейной регрессии
-              </Text>
-            </Stack>
+            <TableWrap title='Данные, спрогнозированы с помощью линейной регрессии'></TableWrap>
           )}
         </Tabs.Panel>
       </Tabs>
