@@ -10,19 +10,13 @@ import {
   Text
 } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
+import { observer } from 'mobx-react-lite';
 
-import { TableWrap } from './components/TableWrap';
-import { PredictService } from './services/predict.service';
-import { formatCurrency } from './utils/helpers/formatCurrency';
-
-type Indicators = {
-  profit: number;
-  net_profit: number;
-  net_loss: number;
-  year: number;
-};
-
-export type Companies = [string, Indicators[]][];
+import { TableWrap } from '@/components';
+import { PredictService } from '@/services';
+import { getCompaniesStore } from '@/store';
+import { Indicators } from '@/types';
+import { formatCurrency } from '@/utils/helpers';
 
 const propIndicator: Exclude<keyof Indicators, ''>[] = [
   'year',
@@ -38,10 +32,9 @@ const dictionary = {
   year: 'Год'
 };
 
-export const App = () => {
-  const [companiesByMA, setCompaniesByMA] = useState<Companies | null>(null);
+export const App = observer(() => {
+  const companies = getCompaniesStore();
   const [isLoadingCompaniesByMA, setIsLoadingCompaniesByMA] = useState(false);
-  const [companiesByLR, setCompaniesByLR] = useState<Companies | null>(null);
 
   const onChangeFile = async (file: File | null) => {
     if (!file) {
@@ -62,7 +55,7 @@ export const App = () => {
     setIsLoadingCompaniesByMA(true);
     try {
       const values = await PredictService.getPredictByMovingAverage(data);
-      setCompaniesByMA(values);
+      companies.setByMovingAverage(values);
     } catch (e) {
       e instanceof Error &&
         showNotification({
@@ -92,9 +85,9 @@ export const App = () => {
               <Loader />
             </Center>
           )}
-          {companiesByMA && (
+          {companies.byMA && (
             <TableWrap>
-              {companiesByMA.map(([companyName, data]) => (
+              {companies.byMA.map(([companyName, data]) => (
                 <Stack mt='lg' key={companyName}>
                   <div>
                     <Text weight={500} component='span'>
@@ -141,9 +134,9 @@ export const App = () => {
           )}
         </Tabs.Panel>
         <Tabs.Panel value='lr'>
-          {companiesByLR && <TableWrap></TableWrap>}
+          {companies.byLR && <TableWrap></TableWrap>}
         </Tabs.Panel>
       </Tabs>
     </main>
   );
-};
+});
