@@ -1,19 +1,12 @@
 import { PropsWithChildren } from 'react';
-import { ScrollArea, Stack, Text } from '@mantine/core';
+import { ScrollArea, Stack } from '@mantine/core';
 
-type Props = PropsWithChildren & {
-  title: string;
-};
+type Props = PropsWithChildren;
 
-export const TableWrap = ({ title, children }: Props) => {
+export const TableWrap = ({ children }: Props) => {
   return (
     <ScrollArea mx='auto'>
-      <Stack mt='md'>
-        <Text component='h3' size='lg' weight={500} className='text-center'>
-          {title}
-        </Text>
-        {children}
-      </Stack>
+      <Stack mt='md'>{children}</Stack>
     </ScrollArea>
   );
 };

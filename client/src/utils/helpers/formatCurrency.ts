@@ -1,5 +1,7 @@
 export const formatCurrency = (value: number) => {
-  return new Intl.NumberFormat('ru-RU', {
-    maximumFractionDigits: 0
-  }).format(value);
+  return value === -1
+    ? '-'
+    : new Intl.NumberFormat('ru-RU', {
+        maximumFractionDigits: 0
+      }).format(value);
 };

@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import {
   Center,
+  clsx,
   FileInput,
-  Flex,
   Loader,
   Stack,
   Table,
@@ -19,18 +19,23 @@ type Indicators = {
   profit: number;
   net_profit: number;
   net_loss: number;
-};
-
-export type Companies = {
-  [x: string]: Indicators;
-} & {
   year: number;
 };
+
+export type Companies = [string, Indicators[]][];
+
+const propIndicator: Exclude<keyof Indicators, ''>[] = [
+  'year',
+  'profit',
+  'net_profit',
+  'net_loss'
+];
 
 const dictionary = {
   net_profit: 'Чистая прибыль, ₽',
   profit: 'Выручка, ₽',
-  net_loss: 'Чистый убыток, ₽'
+  net_loss: 'Чистый убыток, ₽',
+  year: 'Год'
 };
 
 export const App = () => {
@@ -88,52 +93,55 @@ export const App = () => {
             </Center>
           )}
           {companiesByMA && (
-            <TableWrap title='Данные, спрогнозированы с помощью метода скользящей средней'>
-              {Object.entries(companiesByMA).map(([company, indicators]) => {
-                if (company.match(/year/)) {
-                  return (
-                    <h4 key={company}>
-                      Прогнозируемые данные для компании в {companiesByMA.year}
-                    </h4>
-                  );
-                }
-                return (
-                  <Stack key={company} mt='lg'>
-                    <div>
-                      <Text weight={500} component='span'>
-                        Компания {company.toUpperCase()}
-                      </Text>
-                    </div>
-                    <Table horizontalSpacing='xl'>
-                      <thead>
-                        <tr>
-                          {Object.entries(indicators).map(([indicator]) => (
-                            <th key={indicator}>
-                              {dictionary[indicator as keyof typeof dictionary]}
-                            </th>
-                          ))}
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          {Object.entries(indicators).map(
-                            ([indicator, val]) => (
-                              <td key={indicator}>{formatCurrency(val)}</td>
-                            )
-                          )}
-                        </tr>
-                      </tbody>
-                    </Table>
-                  </Stack>
-                );
-              })}
+            <TableWrap>
+              {companiesByMA.map(([companyName, data]) => (
+                <Stack mt='lg' key={companyName}>
+                  <div>
+                    <Text weight={500} component='span'>
+                      Компания {companyName.toUpperCase()}
+                    </Text>
+                  </div>
+                  <Table horizontalSpacing='xl' highlightOnHover>
+                    <thead>
+                      <tr>
+                        {propIndicator.map(prop => (
+                          <th key={prop}>{dictionary[prop]}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {data.map((properties, index) => {
+                        return (
+                          <tr key={properties.year}>
+                            {propIndicator.map(prop => {
+                              const style = clsx(
+                                index === data.length - 1 && 'font-bold'
+                              );
+                              if (prop === 'year') {
+                                return (
+                                  <td key={prop} className={style}>
+                                    {properties[prop]}
+                                  </td>
+                                );
+                              }
+                              return (
+                                <td key={prop} className={style}>
+                                  {formatCurrency(properties[prop])}
+                                </td>
+                              );
+                            })}
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </Table>
+                </Stack>
+              ))}
             </TableWrap>
           )}
         </Tabs.Panel>
         <Tabs.Panel value='lr'>
-          {companiesByLR && (
-            <TableWrap title='Данные, спрогнозированы с помощью линейной регрессии'></TableWrap>
-          )}
+          {companiesByLR && <TableWrap></TableWrap>}
         </Tabs.Panel>
       </Tabs>
     </main>
