@@ -1,55 +1,77 @@
+import numpy as np
 import pandas as pd
-
 from utils.format_num import format_num
 
-
 def get_predict_by_moving_average(file):
-  xl = pd.ExcelFile(file)
+    xl = pd.ExcelFile(file)
+    sheet_names = xl.sheet_names
+    sheets = {}
+    for i in range(0,len(sheet_names)):
+        data = pd.read_excel(file, sheet_name=i)
+        sheets[sheet_names[i]] = data
 
-  sheet_names = xl.sheet_names
+    columns = ['profit', 'net_profit', 'net_loss']
+    years = []
+    for i in range(0, len(sheets[sheet_names[0]]['profit'])):
+        years.append(sheets[sheet_names[0]]['year'][0] + i)
 
-  sheets = {}
+    moving_averages = {}
+    row = {
+      'profit': 0,
+      'net_profit': 0,
+      'net_loss': 0
+    }
+    n = 3
 
-  for i in range(0,len(sheet_names)):
-      data = pd.read_excel(file, sheet_name=i)
-      sheets[sheet_names[i]] = data
+    for i in range(0,len(sheet_names)):
+        frame = pd.DataFrame(sheets[sheet_names[i]])
+        moving_average = frame[columns].rolling(window=n).mean()
+        moving_average.drop(index=moving_average.index[0], 
+          axis=0, 
+          inplace=True)
 
-  columns = ['profit', 'net_profit', 'net_loss']
+        moving_average.loc[len(moving_average) + 1] = row
+        moving_averages[sheet_names[i]] = moving_average.fillna(0).applymap(format_num)
+        moving_averages[sheet_names[i]]['year'] = years
 
+    result = []
 
-  years = []
-  for i in range(0, len(sheets[sheet_names[0]]['profit'])):
-    years.append(2011 + i)
+    for company in sheets:
+        length = len(sheets[company]['year'])
+        columns_with_year = ['year', 'profit', 'net_profit', 'net_loss']
+        temp_arr = []
+        for i in range(0, length):
+            temp = {}
+            for column in columns_with_year:
+                temp[column] = sheets[company][column][i]
+                
+            temp_arr.append(temp)
 
+        result.append([company, temp_arr])
 
-  moving_averages = {}
-  n = 3
+    for i in range(0, len(result)):
+        company = result[i][0]
+        temp = {}
+        print(length)
+        indicators = result[i][1]
 
-  for i in range(0,len(sheet_names)):
-    frame = pd.DataFrame(sheets[sheet_names[i]])
-    moving_average = frame[columns].rolling(window=n).mean()
+        for column in columns_with_year:
+            for j in range(0, length):
+                indicators[j][column] = int(np.float64(indicators[j][column]) if not np.isnan(indicators[j][column]) else -1)
 
-    moving_averages[sheet_names[i]] = moving_average.fillna(0).applymap(format_num)
-    moving_averages[sheet_names[i]]['year'] = years
+        for k in range(0, len(columns)):
+            values = moving_averages[company][columns[k]]
 
+            ma = float(values[len(values) - 1])
+            current_profit = float(sheets[company][columns[k]][length - 1])
+            prev_profit = float(sheets[company][columns[k]][length - 2])
 
-  result = {}
-  result['year'] = sheets[sheet_names[0]]['year'][len(moving_averages[sheet_names[0]]) - 1] + 1
+            temp[columns[k]] = ma + ((current_profit - prev_profit) / 3)
+            
 
-  for company in moving_averages:
-    length = len(moving_averages[company])
-    result[company] = {}
+        temp['year'] = int(result[i][1][length - 1]['year']) + 1
+        print(temp)
+        print(i)
+        result[i][1].append(temp)
 
-    for i in range(0, len(columns)):
-      values = moving_averages[company][columns[i]]
-
-      m = values[len(values) - 2]
-      current_profit = sheets[company][columns[i]][length - 1]
-      prev_profit = sheets[company][columns[i]][length - 2]
-
-      result[company][columns[i]] = float(m) + ((float(current_profit) - float(prev_profit)) / 3)
-
-  return result
-
-  # print(moving_averages)
-  # print(pd.DataFrame(moving_averages[sheet_names[2]]).to_csv('ai-teko.csv'))
+    return result

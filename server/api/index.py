@@ -1,5 +1,5 @@
-import sys, os, json
-from flask import Flask, request
+import sys, os
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 
 
@@ -17,4 +17,4 @@ def predict():
   print(request.args.get('type'))
   
   response = get_predict_by_moving_average(data)
-  return json.dumps(response, default=str)
+  return jsonify(response)
