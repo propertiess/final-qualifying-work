@@ -1,18 +1,25 @@
 import { useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button, FileInput, Flex } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
 import { observer } from 'mobx-react-lite';
 
 import { getCompaniesStore } from '@/store';
 
+const params = {
+  moving_average: 'moving-average',
+  linear_regression: 'linear-regression'
+};
+
 export const FileContainer = observer(() => {
   const companies = getCompaniesStore();
   const [file, setFile] = useState<File | null>(null);
+  const navigate = useNavigate();
 
   const fileInputRef = useRef<HTMLButtonElement>(null);
 
   const onChangeFile = async (f: File | null) => {
-    if (!f || file) {
+    if (!f) {
       return;
     }
 
@@ -30,6 +37,8 @@ export const FileContainer = observer(() => {
     data.append('file', f);
 
     await companies.getPredictByMovingAverage(data);
+    await companies.getPredictByLinearRegression(data);
+    navigate(`/${params.moving_average}`);
 
     companies.error &&
       showNotification({
