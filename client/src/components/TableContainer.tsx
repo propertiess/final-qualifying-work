@@ -8,12 +8,12 @@ import {
   Text
 } from '@mantine/core';
 
-import { TCompanies } from '@/types';
+import { TCompanies, TCompaniesByMA } from '@/types';
 import { dictionary, propIndicator } from '@/utils/consts';
 import { formatCurrency } from '@/utils/helpers';
 
 type Props = {
-  companies: TCompanies;
+  companies: TCompanies | TCompaniesByMA;
   isLoading: boolean;
 };
 
