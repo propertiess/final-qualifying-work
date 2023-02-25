@@ -1,10 +1,10 @@
 import { makeAutoObservable } from 'mobx';
 
 import { PredictService } from '@/services';
-import { TCompanies } from '@/types';
+import { TCompanies, TCompaniesByMA } from '@/types';
 
 class Companies {
-  byMA: TCompanies = [];
+  byMA: TCompaniesByMA = [];
   byLR: TCompanies = [];
   isLoading = false;
   error: Error | null = null;
@@ -32,7 +32,9 @@ class Companies {
     this.setError(null);
 
     try {
-      const response = await PredictService.getPredictByMovingAverage(formData);
+      const response = await PredictService.getPredictByLinearRegression(
+        formData
+      );
       this.setByLR(response);
     } catch (e) {
       if (e instanceof Error) {
@@ -54,7 +56,7 @@ class Companies {
     this.byLR = companies;
   }
 
-  private setByMA(companies: TCompanies) {
+  private setByMA(companies: TCompaniesByMA) {
     this.byMA = companies;
   }
 
