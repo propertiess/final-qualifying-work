@@ -17,6 +17,11 @@ class Companies {
   setByLinearRegression(companies: TCompanies) {
     this.byLR = companies;
   }
+
+  clearAll() {
+    this.byLR = [];
+    this.byMA = [];
+  }
 }
 
 const companies = new Companies();
