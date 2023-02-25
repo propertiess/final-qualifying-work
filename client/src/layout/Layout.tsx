@@ -1,4 +1,4 @@
-import { PropsWithChildren, useState } from 'react';
+import { useState } from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
 import {
   AppShell,
@@ -11,6 +11,8 @@ import {
 } from '@mantine/core';
 
 import { FileContainer } from '../components/FileContainer';
+
+import { Menu } from './Menu';
 
 export const Layout = () => {
   const [opened, setOpened] = useState(false);
@@ -38,18 +40,16 @@ export const Layout = () => {
           </div>
         </Header>
       }
-      // navbar={<MyNavbar opened={opened} />}
+      navbar={<Menu opened={opened} onChange={() => setOpened(o => !o)} />}
       footer={
         <Footer height='auto' p='xs' className='text-center'>
           &copy; 2023
         </Footer>
       }
     >
-      <Container>
-        <>
-          <FileContainer />
-          <Outlet />
-        </>
+      <Container className='pb-14'>
+        <FileContainer />
+        <Outlet />
       </Container>
     </AppShell>
   );
