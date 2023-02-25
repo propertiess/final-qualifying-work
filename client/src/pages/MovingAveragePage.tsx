@@ -1,7 +1,15 @@
-import { HTMLAttributes } from 'react';
+import { observer } from 'mobx-react-lite';
 
-type Props = HTMLAttributes<unknown>;
+import { TableContainer } from '@/components';
+import { getCompaniesStore } from '@/store';
 
-export const MovingAveragePage = ({ ...rest }: Props) => {
-  return <div {...rest}>MovingAveragePage</div>;
-};
+export const MovingAveragePage = observer(() => {
+  const companies = getCompaniesStore();
+
+  return (
+    <TableContainer
+      isLoading={companies.isLoading}
+      companies={companies.byMA}
+    />
+  );
+});

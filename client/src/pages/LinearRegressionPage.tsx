@@ -1,7 +1,15 @@
-import { HTMLAttributes } from 'react';
+import { observer } from 'mobx-react-lite';
 
-type Props = HTMLAttributes<unknown>;
+import { TableContainer } from '@/components';
+import { getCompaniesStore } from '@/store';
 
-export const LinearRegressionPage = ({ ...rest }: Props) => {
-  return <div {...rest}>LinearRegressionPage</div>;
-};
+export const LinearRegressionPage = observer(() => {
+  const companies = getCompaniesStore();
+
+  return (
+    <TableContainer
+      isLoading={companies.isLoading}
+      companies={companies.byLR}
+    />
+  );
+});

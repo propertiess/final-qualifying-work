@@ -6,3 +6,8 @@ export type Indicators = {
 };
 
 export type TCompanies = [string, Indicators[]][];
+
+export type Link = {
+  href: string;
+  title: string;
+};

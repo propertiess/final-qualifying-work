@@ -1,26 +1,77 @@
-import { PropsWithChildren } from 'react';
-import { Center, Loader, ScrollArea, Stack } from '@mantine/core';
-import { observer } from 'mobx-react-lite';
+import {
+  Center,
+  clsx,
+  Loader,
+  ScrollArea,
+  Stack,
+  Table,
+  Text
+} from '@mantine/core';
 
-import { getCompaniesStore } from '@/store';
+import { TCompanies } from '@/types';
+import { dictionary, propIndicator } from '@/utils/consts';
+import { formatCurrency } from '@/utils/helpers';
 
-type Props = PropsWithChildren;
+type Props = {
+  companies: TCompanies;
+  isLoading: boolean;
+};
 
-export const TableContainer = observer(({ children }: Props) => {
-  const companies = getCompaniesStore();
-
+export const TableContainer = ({ companies, isLoading }: Props) => {
   return (
     <ScrollArea mx='auto'>
       <Stack mt='md'>
         <>
-          {companies.isLoading && (
+          {isLoading && (
             <Center mt='xl'>
               <Loader />
             </Center>
           )}
-          {children}
+          {companies.map(([companyName, data]) => (
+            <Stack mt='lg' key={companyName}>
+              <div>
+                <Text weight={500} component='span'>
+                  Компания {companyName.toUpperCase()}
+                </Text>
+              </div>
+              <Table horizontalSpacing='xl' highlightOnHover>
+                <thead>
+                  <tr>
+                    {propIndicator.map(prop => (
+                      <th key={prop}>{dictionary[prop]}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.map((properties, index) => {
+                    return (
+                      <tr key={properties.year}>
+                        {propIndicator.map(prop => {
+                          const style = clsx(
+                            index === data.length - 1 && 'font-bold'
+                          );
+                          if (prop === 'year') {
+                            return (
+                              <td key={prop} className={style}>
+                                {properties[prop]}
+                              </td>
+                            );
+                          }
+                          return (
+                            <td key={prop} className={style}>
+                              {formatCurrency(properties[prop])}
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </Table>
+            </Stack>
+          ))}
         </>
       </Stack>
     </ScrollArea>
   );
-});
+};
