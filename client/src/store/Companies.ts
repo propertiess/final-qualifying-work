@@ -16,6 +16,8 @@ class Companies {
   async getPredictByMovingAverage(formData: FormData) {
     this.setIsLoading(true);
     this.setError(null);
+    this.byMA.length && this.setByMA([]);
+
     try {
       const response = await PredictService.getPredictByMovingAverage(formData);
       this.setByMA(response);
@@ -30,6 +32,7 @@ class Companies {
   async getPredictByLinearRegression(formData: FormData) {
     this.setIsLoading(true);
     this.setError(null);
+    this.byLR.length && this.setByLR([]);
 
     try {
       const response = await PredictService.getPredictByLinearRegression(
