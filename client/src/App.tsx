@@ -1,22 +1,12 @@
-import { useState } from 'react';
-import {
-  Center,
-  clsx,
-  FileInput,
-  Loader,
-  Stack,
-  Table,
-  Tabs,
-  Text
-} from '@mantine/core';
-import { showNotification } from '@mantine/notifications';
+import { clsx, Stack, Table, Tabs, Text } from '@mantine/core';
 import { observer } from 'mobx-react-lite';
 
-import { TableWrap } from '@/components';
-import { PredictService } from '@/services';
+import { TableContainer } from '@/components';
 import { getCompaniesStore } from '@/store';
 import { Indicators } from '@/types';
 import { formatCurrency } from '@/utils/helpers';
+
+import { Layout } from './layout';
 
 const propIndicator: Exclude<keyof Indicators, ''>[] = [
   'year',
@@ -34,59 +24,17 @@ const dictionary = {
 
 export const App = observer(() => {
   const companies = getCompaniesStore();
-  const [isLoadingCompaniesByMA, setIsLoadingCompaniesByMA] = useState(false);
-
-  const onChangeFile = async (file: File | null) => {
-    if (!file) {
-      return;
-    }
-
-    if (!file.name.match(/.xlsx|.xls/g)) {
-      showNotification({
-        title: 'Ошибка',
-        message: 'Неправильный тип файла!'
-      });
-      return;
-    }
-
-    const data = new FormData();
-    data.append('file', file);
-
-    setIsLoadingCompaniesByMA(true);
-    try {
-      const values = await PredictService.getPredictByMovingAverage(data);
-      companies.setByMovingAverage(values);
-    } catch (e) {
-      e instanceof Error &&
-        showNotification({
-          title: 'Ошибка',
-          message: e.message
-        });
-    }
-    setIsLoadingCompaniesByMA(false);
-  };
 
   return (
-    <main className='p-10'>
-      <FileInput
-        placeholder='Загрузить dataset'
-        withAsterisk
-        accept='.xlsx,.xls'
-        onChange={file => onChangeFile(file)}
-      />
+    <Layout>
       <Tabs defaultValue='ma' mt='lg'>
         <Tabs.List>
           <Tabs.Tab value='ma'>Метод скользящей средней</Tabs.Tab>
           <Tabs.Tab value='lr'>Линейная регрессия</Tabs.Tab>
         </Tabs.List>
         <Tabs.Panel value='ma'>
-          {isLoadingCompaniesByMA && (
-            <Center mt='xl'>
-              <Loader />
-            </Center>
-          )}
           {companies.byMA && (
-            <TableWrap>
+            <TableContainer>
               {companies.byMA.map(([companyName, data]) => (
                 <Stack mt='lg' key={companyName}>
                   <div>
@@ -130,13 +78,13 @@ export const App = observer(() => {
                   </Table>
                 </Stack>
               ))}
-            </TableWrap>
+            </TableContainer>
           )}
         </Tabs.Panel>
         <Tabs.Panel value='lr'>
-          {companies.byLR && <TableWrap></TableWrap>}
+          {companies.byLR && <TableContainer></TableContainer>}
         </Tabs.Panel>
       </Tabs>
-    </main>
+    </Layout>
   );
 });
