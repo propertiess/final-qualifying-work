@@ -1,9 +1,10 @@
 import { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
+import { RouterProvider } from 'react-router-dom';
 import { MantineProvider } from '@mantine/core';
 import { NotificationsProvider } from '@mantine/notifications';
 
-import { App } from './App';
+import { router } from './router';
 
 import './globals.css';
 
@@ -19,7 +20,7 @@ root.render(
       theme={{ colorScheme: 'dark' }}
     >
       <NotificationsProvider>
-        <App />
+        <RouterProvider router={router} />
       </NotificationsProvider>
     </MantineProvider>
   </StrictMode>
