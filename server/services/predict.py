@@ -49,11 +49,25 @@ def get_predict_by_moving_average(file):
 
         result.append([company, temp_arr])
 
+    moving_averages_arr = []
+
+    for ss in range(length):
+        moving_averages_arr.append([])
+        for ggs in range(length):
+            moving_averages_arr[ss].append({})
+
     for i in range(0, len(result)):
         company = result[i][0]
         temp = {}
         print(length)
         indicators = result[i][1]
+
+        for column in columns_with_year:
+            gg_values = moving_averages[company][column]
+            count = 0
+            for value in gg_values:
+                moving_averages_arr[i][count][column] = value
+                count += 1
 
         for column in columns_with_year:
             for j in range(0, length):
@@ -73,5 +87,7 @@ def get_predict_by_moving_average(file):
         print(temp)
         print(i)
         result[i][1].append(temp)
+        result[i].append(moving_averages_arr[i])
+
 
     return result
