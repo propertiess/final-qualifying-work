@@ -16,7 +16,7 @@ export const FileContainer = observer(() => {
       return;
     }
 
-    if (!f.name.match(/.xlsx|.xls/g)) {
+    if (!f.name.match(/.xlsx|.xls|.csv/g)) {
       showNotification({
         title: 'Ошибка',
         message: 'Неправильный тип файла!'
@@ -44,7 +44,7 @@ export const FileContainer = observer(() => {
         className='flex-grow'
         placeholder='Загрузить dataset'
         withAsterisk
-        accept='.xlsx,.xls'
+        accept='.xlsx,.xls,.csv'
         value={file}
         ref={fileInputRef}
         onChange={file => onChangeFile(file)}

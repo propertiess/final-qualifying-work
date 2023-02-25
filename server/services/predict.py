@@ -1,19 +1,12 @@
 import numpy as np
 import pandas as pd
 from utils.format_num import format_num
+from utils.get_initial_data import get_initial_data
+from utils.isExcelFile import isExcelFile
 
 def get_predict_by_moving_average(file):
-    xl = pd.ExcelFile(file)
-    sheet_names = xl.sheet_names
-    sheets = {}
-    for i in range(0,len(sheet_names)):
-        data = pd.read_excel(file, sheet_name=i)
-        sheets[sheet_names[i]] = data
-
-    columns = ['profit', 'net_profit', 'net_loss']
-    years = []
-    for i in range(0, len(sheets[sheet_names[0]]['profit'])):
-        years.append(sheets[sheet_names[0]]['year'][0] + i)
+    isExcel = isExcelFile(file.filename)
+    sheets, sheet_names, years, columns = get_initial_data(file, isExcel)
 
     moving_averages = {}
     row = {
@@ -59,7 +52,6 @@ def get_predict_by_moving_average(file):
     for i in range(0, len(result)):
         company = result[i][0]
         temp = {}
-        print(length)
         indicators = result[i][1]
 
         for column in columns_with_year:
@@ -84,8 +76,6 @@ def get_predict_by_moving_average(file):
             
 
         temp['year'] = int(result[i][1][length - 1]['year']) + 1
-        print(temp)
-        print(i)
         result[i][1].append(temp)
         result[i].append(moving_averages_arr[i])
 
