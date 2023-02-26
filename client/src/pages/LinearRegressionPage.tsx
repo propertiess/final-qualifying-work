@@ -1,19 +1,23 @@
-import { useQuery } from '@tanstack/react-query';
+import { Text } from '@mantine/core';
 import { observer } from 'mobx-react-lite';
 
 import { TableContainer } from '@/components';
-import { PredictService } from '@/services';
+import { useGetPredictByLinearRegression } from '@/hooks/useGetPredict';
 import { getCompaniesStore } from '@/store';
 
 export const LinearRegressionPage = observer(() => {
   const companies = getCompaniesStore();
-  const { data, isFetching } = useQuery({
-    queryKey: ['linear-regression'],
-    enabled: !!companies.formData,
-    staleTime: 10_000,
-    queryFn: () =>
-      PredictService.getPredictByLinearRegression(companies.formData!)
-  });
+  const { data, isLoading } = useGetPredictByLinearRegression(
+    companies.formData
+  );
 
-  return <TableContainer isLoading={isFetching} companies={data ?? []} />;
+  if (!companies.formData) {
+    return (
+      <Text weight='bold' size='lg'>
+        Загрузите файл!
+      </Text>
+    );
+  }
+
+  return <TableContainer isLoading={isLoading} companies={data ?? []} />;
 });

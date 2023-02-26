@@ -1,18 +1,21 @@
-import { useQuery } from '@tanstack/react-query';
+import { Text } from '@mantine/core';
 import { observer } from 'mobx-react-lite';
 
 import { TableContainer } from '@/components';
-import { PredictService } from '@/services';
+import { useGetPredictByMovingAverage } from '@/hooks/useGetPredict';
 import { getCompaniesStore } from '@/store';
 
 export const MovingAveragePage = observer(() => {
   const companies = getCompaniesStore();
-  const { data, isFetching } = useQuery({
-    queryKey: ['moving-average'],
-    enabled: !!companies.formData,
-    staleTime: 10_000,
-    queryFn: () => PredictService.getPredictByMovingAverage(companies.formData!)
-  });
+  const { data, isLoading } = useGetPredictByMovingAverage(companies.formData);
 
-  return <TableContainer isLoading={isFetching} companies={data ?? []} />;
+  if (!companies.formData) {
+    return (
+      <Text weight='bold' size='lg'>
+        Загрузите файл!
+      </Text>
+    );
+  }
+
+  return <TableContainer isLoading={isLoading} companies={data ?? []} />;
 });
