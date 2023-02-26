@@ -10,8 +10,6 @@ import {
   Title
 } from '@mantine/core';
 
-import { FileContainer } from '../components/FileContainer';
-
 import { Menu } from './Menu';
 
 export const Layout = () => {
@@ -48,7 +46,6 @@ export const Layout = () => {
       }
     >
       <Container className='pb-14'>
-        <FileContainer />
         <Outlet />
       </Container>
     </AppShell>

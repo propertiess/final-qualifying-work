@@ -1,13 +1,17 @@
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Button, FileInput, Flex } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
 import { observer } from 'mobx-react-lite';
 
 import { getCompaniesStore } from '@/store';
+import { routes } from '@/utils/consts';
 
 export const FileContainer = observer(() => {
   const companies = getCompaniesStore();
-  const [file, setFile] = useState<File | null>(null);
+
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
 
   const fileInputRef = useRef<HTMLButtonElement>(null);
 
@@ -24,11 +28,18 @@ export const FileContainer = observer(() => {
       return;
     }
 
-    setFile(f);
+    const route = pathname.split('/')[1];
+    companies.setFile(f);
 
     const data = new FormData();
     data.append('file', f);
     companies.setFormData(data);
+
+    switch (route) {
+      default: {
+        navigate(`/${routes.moving_average}`);
+      }
+    }
   };
 
   return (
@@ -38,11 +49,11 @@ export const FileContainer = observer(() => {
         placeholder='Загрузить dataset'
         withAsterisk
         accept='.xlsx,.xls,.csv'
-        value={file}
+        value={companies.file}
         ref={fileInputRef}
         onChange={file => onChangeFile(file)}
       />
-      {file && (
+      {companies.file && (
         <Button
           onClick={() => {
             fileInputRef.current?.click();

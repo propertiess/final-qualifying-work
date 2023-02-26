@@ -13,3 +13,8 @@ export const dictionary = {
   net_loss: 'Чистый убыток, ₽',
   year: 'Год'
 };
+
+export const routes = {
+  moving_average: 'moving-average',
+  linear_regression: 'linear-regression'
+};
