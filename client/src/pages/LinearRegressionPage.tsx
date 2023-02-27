@@ -7,7 +7,7 @@ import { getCompaniesStore } from '@/store';
 
 export const LinearRegressionPage = observer(() => {
   const companies = getCompaniesStore();
-  const { data, isLoading } = useGetPredictByLinearRegression(
+  const { data, isFetching } = useGetPredictByLinearRegression(
     companies.formData
   );
 
@@ -19,5 +19,5 @@ export const LinearRegressionPage = observer(() => {
     );
   }
 
-  return <TableContainer isLoading={isLoading} companies={data ?? []} />;
+  return <TableContainer isLoading={isFetching} companies={data ?? []} />;
 });

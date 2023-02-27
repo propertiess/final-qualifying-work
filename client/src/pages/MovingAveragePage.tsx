@@ -7,7 +7,10 @@ import { getCompaniesStore } from '@/store';
 
 export const MovingAveragePage = observer(() => {
   const companies = getCompaniesStore();
-  const { data, isLoading } = useGetPredictByMovingAverage(companies.formData);
+  const { data, isFetching } = useGetPredictByMovingAverage(
+    companies.formData,
+    companies.file?.lastModified
+  );
 
   if (!companies.formData) {
     return (
@@ -17,5 +20,5 @@ export const MovingAveragePage = observer(() => {
     );
   }
 
-  return <TableContainer isLoading={isLoading} companies={data ?? []} />;
+  return <TableContainer isLoading={isFetching} companies={data ?? []} />;
 });
