@@ -2,10 +2,10 @@ import { PropsWithChildren, useState } from 'react';
 import {
   AppShell,
   Burger,
-  Container,
   Footer,
   Header,
   MediaQuery,
+  Stack,
   Title
 } from '@mantine/core';
 import Head from 'next/head';
@@ -56,7 +56,7 @@ export const Layout = ({ title, description, children }: Props) => {
           </Footer>
         }
       >
-        <Container className='pb-14'>{children}</Container>
+        <Stack className='pb-24'>{children}</Stack>
       </AppShell>
     </>
   );
