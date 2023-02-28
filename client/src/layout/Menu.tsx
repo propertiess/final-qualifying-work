@@ -1,6 +1,7 @@
 import { Fragment } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
 import { clsx, Navbar } from '@mantine/core';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 import { links } from './menu-links';
 
@@ -10,7 +11,7 @@ type Props = {
 };
 
 export const Menu = ({ opened, onChange }: Props) => {
-  const { pathname } = useLocation();
+  const { asPath } = useRouter();
 
   return (
     <Navbar
@@ -26,16 +27,16 @@ export const Menu = ({ opened, onChange }: Props) => {
       <Navbar.Section>
         {links.map(link => (
           <Fragment key={link.href}>
-            <NavLink
+            <Link
               className={clsx(
                 'hover:text-opacity-100; mt-3 block rounded-md p-3 text-xl font-medium text-white text-opacity-70 hover:bg-gray-800',
-                pathname === link.href && 'bg-gray-800 text-opacity-100'
+                asPath === link.href && 'bg-gray-800 text-opacity-100'
               )}
-              to={link.href}
+              href={link.href}
               onClick={onChange}
             >
               {link.title}
-            </NavLink>
+            </Link>
           </Fragment>
         ))}
       </Navbar.Section>

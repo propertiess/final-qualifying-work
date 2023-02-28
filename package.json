@@ -18,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/propertiess/final-qualifying-work/issues"
   },
-  "homepage": "https://github.com/propertiess/final-qualifying-work#readme"
+  "homepage": "https://github.com/propertiess/final-qualifying-work#readme",
+  "devDependencies": {
+    "npm-run-all": "^4.1.5"
+  }
 }

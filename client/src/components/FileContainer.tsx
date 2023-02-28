@@ -1,17 +1,15 @@
 import { useRef } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
 import { Button, FileInput, Flex } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
 import { observer } from 'mobx-react-lite';
+import { useRouter } from 'next/router';
 
 import { getCompaniesStore } from '@/store';
 import { routes } from '@/utils/consts';
 
 export const FileContainer = observer(() => {
   const companies = getCompaniesStore();
-
-  const { pathname } = useLocation();
-  const navigate = useNavigate();
+  const { asPath, push } = useRouter();
 
   const fileInputRef = useRef<HTMLButtonElement>(null);
 
@@ -28,7 +26,7 @@ export const FileContainer = observer(() => {
       return;
     }
 
-    const route = pathname.split('/')[1];
+    const route = asPath.split('/')[1];
     companies.setFile(f);
 
     const data = new FormData();
@@ -37,7 +35,7 @@ export const FileContainer = observer(() => {
 
     switch (route) {
       default: {
-        navigate(`/${routes.moving_average}`);
+        push(`/${routes.moving_average}`);
       }
     }
   };

@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { queryClient } from '@/main';
+import { queryClient } from '@/../pages/_app';
 import { PredictService } from '@/services';
 import { routes } from '@/utils/consts';
 
