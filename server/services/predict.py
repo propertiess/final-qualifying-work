@@ -132,8 +132,8 @@ def get_predict_by_linear_regression(file):
             model.fit(x_train, y_train)
 
             # future_x = np.array([[years[len(years) - 1]]]).reshape(-1, 1)
-            future_x = np.array([[years[len(years) - 1]]])
-            future_y = model.predict(future_x)
+            # future_x = np.array([[years[len(years) - 1]]])
+            future_y = model.predict([[years[len(years) - 1]]])
 
             temp[column] = pd.DataFrame(future_y).applymap(format_num)[0][0]
 
@@ -141,18 +141,8 @@ def get_predict_by_linear_regression(file):
 
             mse = mean_squared_error(y_test, y_pred)
             print(format_num(mse), 'mse')
+            print('r2', model.score(x_test, y_test))
 
-            # mae = mean_absolute_error(y_test, y_pred)
-            # y_pred = model.predict(x_test)
-            # gg = model.score(x_test, y_test)
-            # print(gg)
-
-            # mse = mean_squared_error(y_test, y_pred)
-            # mae = mean_absolute_error(y_test, y_pred)
-            # r2 = r2_score(y_test, y_pred)
-            # loss, mae, mse = model.evaluate(x_test, y_test, verbose=0)
-            # print(loss, mae, mse)
-            # print(mse, mae, r2)
             temp[column] = pd.DataFrame(future_y).applymap(format_num)[0][0]
 
         response[count].append(sheet)
@@ -238,5 +228,4 @@ def get_predict_by_linear_regression(file):
             #             indicators[j][column] = int(np.float64(
             #
             #                 indicators[j][column]) if not pd.isna(indicators[j][column]) else -1)
-    print(1)
     return response
