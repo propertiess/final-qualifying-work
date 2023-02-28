@@ -2,10 +2,13 @@ import { useQuery } from '@tanstack/react-query';
 
 import { queryClient } from '@/../pages/_app';
 import { PredictService } from '@/services';
+import { TCompanies, TCompaniesByMA } from '@/types';
 import { routes } from '@/utils/consts';
 
 export const useGetMovingAverageData = () => {
-  const data = queryClient.getQueriesData([routes.moving_average]);
+  const data = queryClient.getQueriesData<TCompaniesByMA>([
+    routes.moving_average
+  ]);
 
   if (!data.length) return [];
 
@@ -13,7 +16,9 @@ export const useGetMovingAverageData = () => {
 };
 
 export const useGetLinearRegressionData = () => {
-  const data = queryClient.getQueriesData([routes.linear_regression]);
+  const data = queryClient.getQueriesData<TCompanies>([
+    routes.linear_regression
+  ]);
 
   if (!data.length) return [];
 
