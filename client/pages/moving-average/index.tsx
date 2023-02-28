@@ -19,7 +19,11 @@ const MovingAveragePage = observer(() => {
       description='Прогнозы с помощью метода скользящей средней'
     >
       {companies.formData ? (
-        <TableContainer isLoading={isFetching} companies={data ?? []} />
+        <TableContainer
+          companies={data ?? []}
+          isLoading={isFetching}
+          details='moving-average'
+        />
       ) : (
         <Text weight='bold' size='lg'>
           Загрузите файл!

@@ -18,7 +18,11 @@ const LinearRegressionPage = observer(() => {
       description='Прогнозы с помощью линейной регрессии'
     >
       {companies.formData ? (
-        <TableContainer isLoading={isFetching} companies={data ?? []} />
+        <TableContainer
+          companies={data ?? []}
+          isLoading={isFetching}
+          details='linear-regression'
+        />
       ) : (
         <Text weight='bold' size='lg'>
           Загрузите файл!
