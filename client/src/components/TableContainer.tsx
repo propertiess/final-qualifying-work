@@ -21,7 +21,7 @@ type Props = {
 
 export const TableContainer = ({ companies, isLoading, details }: Props) => {
   return (
-    <ScrollArea mx='auto'>
+    <ScrollArea>
       <Stack mt='md'>
         <>
           {isLoading && (
