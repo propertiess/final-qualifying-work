@@ -11,7 +11,7 @@ type Props = {
 };
 
 export const Menu = ({ opened, onChange }: Props) => {
-  const { asPath } = useRouter();
+  const router = useRouter();
 
   return (
     <Navbar
@@ -30,7 +30,7 @@ export const Menu = ({ opened, onChange }: Props) => {
             <Link
               className={clsx(
                 'hover:text-opacity-100; mt-3 block rounded-md p-3 text-xl font-medium text-white text-opacity-70 hover:bg-gray-800',
-                asPath === link.href && 'bg-gray-800 text-opacity-100'
+                router.asPath === link.href && 'bg-gray-800 text-opacity-100'
               )}
               href={link.href}
               onClick={onChange}

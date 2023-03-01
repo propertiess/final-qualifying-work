@@ -9,14 +9,14 @@ import {
 } from '@mantine/core';
 import Link from 'next/link';
 
-import { TCompanies, TCompaniesByMA } from '@/types';
-import { dictionary, propIndicator } from '@/utils/consts';
+import { Methods, TCompanies } from '@/types';
+import { indicatorDictionary, propIndicator } from '@/utils/consts';
 import { formatCurrency } from '@/utils/helpers';
 
 type Props = {
-  companies: TCompanies | TCompaniesByMA;
+  companies: TCompanies;
   isLoading: boolean;
-  details: 'moving-average' | 'linear-regression';
+  details: Methods;
 };
 
 export const TableContainer = ({ companies, isLoading, details }: Props) => {
@@ -35,7 +35,7 @@ export const TableContainer = ({ companies, isLoading, details }: Props) => {
                 <Text weight={500} component='span'>
                   Компания {companyName.toUpperCase()}
                 </Text>
-                <Link href={`${details}/${idx}`}>
+                <Link href={`/companies/${idx}?type=${details}`}>
                   <Text className='text-[#4dabf7d7] transition-colors hover:text-[#4dabf7]'>
                     Ознакомиться с графиками
                   </Text>
@@ -45,7 +45,7 @@ export const TableContainer = ({ companies, isLoading, details }: Props) => {
                 <thead>
                   <tr>
                     {propIndicator.map(prop => (
-                      <th key={prop}>{dictionary[prop]}</th>
+                      <th key={prop}>{indicatorDictionary[prop]}</th>
                     ))}
                   </tr>
                 </thead>

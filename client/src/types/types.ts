@@ -5,10 +5,11 @@ export type Indicators = {
   year: number;
 };
 
-export type TCompanies = [string, Indicators[]][];
-export type TCompaniesByMA = [string, Indicators[], Indicators[]][];
+export type TCompanies = [string, Indicators[], Indicators[]][];
 
 export type Link = {
   href: string;
   title: string;
 };
+
+export type Methods = 'moving-average' | 'linear-regression';

@@ -7,7 +7,7 @@ export const propIndicator: Exclude<keyof Indicators, ''>[] = [
   'net_loss'
 ];
 
-export const dictionary = {
+export const indicatorDictionary = {
   net_profit: 'Чистая прибыль, ₽',
   profit: 'Выручка, ₽',
   net_loss: 'Чистый убыток, ₽',
@@ -17,4 +17,9 @@ export const dictionary = {
 export const routes = {
   moving_average: 'moving-average',
   linear_regression: 'linear-regression'
+};
+
+export const titleDictionary = {
+  'moving-average': 'Метод скользящей средней',
+  'linear-regression': 'Линейная регрессия'
 };

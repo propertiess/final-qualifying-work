@@ -1,20 +1,12 @@
-import { TCompanies, TCompaniesByMA } from '@/types';
+import { Methods, TCompanies } from '@/types';
 
 import { instance } from './instance';
 
 export const PredictService = {
-  async getPredictByMovingAverage(formData: FormData) {
-    const { data } = await instance.post<TCompaniesByMA>('/predict', formData, {
-      params: {
-        type: 'moving_average'
-      }
-    });
-    return data;
-  },
-  async getPredictByLinearRegression(formData: FormData) {
+  async getByType(formData: FormData, type: Methods) {
     const { data } = await instance.post<TCompanies>('/predict', formData, {
       params: {
-        type: 'linear_regression'
+        type
       }
     });
     return data;

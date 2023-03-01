@@ -35,7 +35,7 @@ export const FileContainer = observer(() => {
 
     switch (route) {
       default: {
-        push(`/${routes.moving_average}`);
+        push(`/companies?type=${routes.moving_average}`);
       }
     }
   };

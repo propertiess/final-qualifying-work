@@ -1,28 +1,34 @@
 import { Text } from '@mantine/core';
-import { observer } from 'mobx-react-lite';
+import { useRouter } from 'next/router';
 
 import { TableContainer } from '@/components';
-import { useGetPredictByMovingAverage } from '@/hooks/useGetPredict';
+import { useGetPredict } from '@/hooks';
 import { Layout } from '@/layout';
 import { getCompaniesStore } from '@/store';
+import { Methods } from '@/types';
+import { titleDictionary } from '@/utils/consts';
 
-const MovingAveragePage = observer(() => {
+const Companies = () => {
   const companies = getCompaniesStore();
-  const { data, isFetching } = useGetPredictByMovingAverage(
+  const router = useRouter();
+  const type = router.query.type as Methods;
+
+  const { data, isFetching } = useGetPredict(
+    type,
     companies.formData,
     companies.file?.lastModified
   );
 
   return (
     <Layout
-      title='Метод скользящей средней'
-      description='Прогнозы с помощью метода скользящей средней'
+      title={titleDictionary[type]}
+      description={`Прогнозы с помощью ${titleDictionary[type]}`}
     >
       {companies.formData ? (
         <TableContainer
           companies={data ?? []}
           isLoading={isFetching}
-          details='moving-average'
+          details={type}
         />
       ) : (
         <Text weight='bold' size='lg'>
@@ -31,6 +37,6 @@ const MovingAveragePage = observer(() => {
       )}
     </Layout>
   );
-});
+};
 
-export default MovingAveragePage;
+export default Companies;

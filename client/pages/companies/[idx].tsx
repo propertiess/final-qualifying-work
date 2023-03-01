@@ -3,13 +3,19 @@ import { Line } from '@nivo/line';
 import { useRouter } from 'next/router';
 import ErrorPage from 'pages/404';
 
-import { useGetMovingAverageData } from '@/hooks';
+import { useGetDataByType } from '@/hooks';
 import { Layout } from '@/layout';
-import { dictionary, propIndicator } from '@/utils/consts';
+import { Methods } from '@/types';
+import {
+  indicatorDictionary,
+  propIndicator,
+  titleDictionary
+} from '@/utils/consts';
 
-const MovingAverageDetails = () => {
+const CompanyDetails = () => {
   const router = useRouter();
-  const data = useGetMovingAverageData();
+  const type = router.query.type as Methods;
+  const data = useGetDataByType(type);
   const company = data ? data[+router.query.idx!] : [];
 
   if (!company?.length) {
@@ -17,9 +23,11 @@ const MovingAverageDetails = () => {
   }
 
   return (
-    <Layout title={company[0]} description={`${company[0]} графики`}>
+    <Layout title={company[0]} description={`Графики компании ${company[0]}`}>
       <Center>
-        <Title>{company[0]}</Title>
+        <Title>
+          {company[0]}, {titleDictionary[type]}
+        </Title>
       </Center>
       {propIndicator.map((indicator, idx) => {
         if (indicator === 'year') {
@@ -32,7 +40,7 @@ const MovingAverageDetails = () => {
             h={500}
             className={clsx('w-full', idx > 1 && 'mt-20')}
           >
-            <Title>{dictionary[indicator]}</Title>
+            <Title>{indicatorDictionary[indicator]}</Title>
             <Center>
               <Line
                 height={500}
@@ -98,4 +106,4 @@ const MovingAverageDetails = () => {
   );
 };
 
-export default MovingAverageDetails;
+export default CompanyDetails;
