@@ -5,7 +5,7 @@
   "scripts": {
     "start": "run-p client server",
     "client": "cd client && pnpm dev",
-    "server": "cd server/api && flask --app index --debug run",
+    "server": "cd server && python main.py",
     "client-prod": "cd client && vercel --prod",
     "server-prod": "cd server && vercel --prod"
   },

@@ -1,9 +1,7 @@
 from flask_cors import CORS
 from flask import Flask, request, jsonify
 import os
-import sys
 
-sys.path.insert(1, os.path.join(sys.path[0], '..'))
 from services.predict import get_predict_by_moving_average, get_predict_by_linear_regression
 
 
@@ -15,12 +13,13 @@ CORS(app)
 def predict():
     file = request.files['file']
 
-    # get query
-    print(request.args.get('type'))
-
     if request.args.get('type') == 'moving-average':
         response = get_predict_by_moving_average(file)
     else:
         response = get_predict_by_linear_regression(file)
 
     return jsonify(response)
+
+
+if __name__ == '__main__':
+    app.run(debug=False, port=os.getenv("PORT", default=5000))
