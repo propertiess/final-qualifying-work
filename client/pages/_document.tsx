@@ -2,7 +2,7 @@ import { Head, Html, Main, NextScript } from 'next/document';
 
 const Document = () => {
   return (
-    <Html>
+    <Html style={{ opacity: 0 }}>
       <Head>
         <link rel='icon' href='/logo.png' />
       </Head>
