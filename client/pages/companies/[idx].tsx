@@ -34,6 +34,44 @@ const CompanyDetails = () => {
           return null;
         }
 
+        const factData = [];
+        const predictData = [];
+
+        for (let i = 0; i < company[1].length; i++) {
+          const factValues = company[1];
+          const predictValues = company[2];
+
+          const predictValue = {
+            x: predictValues[i].year,
+            y: +predictValues[i][indicator] / 1_000_000_000
+          };
+
+          if (i === factValues.length - 1) {
+            predictData.push(predictValue);
+            break;
+          }
+
+          const factValue = {
+            x: factValues[i].year,
+            y: +factValues[i][indicator] / 1_000_000_000
+          };
+
+          factData.push(factValue);
+          predictData.push(predictValue);
+        }
+
+        const min =
+          Math.min(...factData.map(el => el.y)) >
+          Math.min(...predictData.map(el => el.y))
+            ? Math.min(...predictData.map(el => el.y))
+            : Math.min(...factData.map(el => el.y));
+
+        const max =
+          Math.max(...factData.map(el => el.y)) >
+          Math.max(...predictData.map(el => el.y))
+            ? Math.max(...factData.map(el => el.y))
+            : Math.max(...predictData.map(el => el.y));
+
         return (
           <Stack
             key={indicator}
@@ -49,20 +87,24 @@ const CompanyDetails = () => {
                   {
                     id: 'Фактическое значения, млрд.',
                     color: 'hsl(328, 70%, 50%)',
-                    data: company[1].map(el => ({
-                      x: el.year,
-                      y: +el[indicator] / 1_000_000_000
-                    }))
+                    data: factData
                   },
                   {
-                    id: 'Скользящая средняя, млрд.',
+                    id: `${
+                      type === 'moving-average'
+                        ? 'Скользящая средняя'
+                        : 'Предсказанное значение'
+                    }, млрд.`,
                     color: 'hsl(324, 70%, 50%)',
-                    data: company[2].map(el => ({
-                      x: el.year,
-                      y: +el[indicator] / 1_000_000_000
-                    }))
+                    data: predictData
                   }
                 ]}
+                yScale={{
+                  type: 'linear',
+                  stacked: false,
+                  min: min - 1,
+                  max: max + 1
+                }}
                 margin={{ top: 10, right: 50, bottom: 100, left: 60 }}
                 pointSize={10}
                 pointBorderWidth={2}

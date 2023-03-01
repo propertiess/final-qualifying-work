@@ -88,6 +88,7 @@ def get_predict_by_moving_average(file):
 
         temp['year'] = int(result[i][1][length - 1]['year']) + 1
         result[i][1].append(temp)
+        moving_averages_arr[i].append(temp)
         result[i].append(moving_averages_arr[i])
 
     return result
@@ -137,12 +138,19 @@ def get_predict_by_linear_regression(file):
 
             # future_x = np.array([[years[len(years) - 1]]]).reshape(-1, 1)
             # future_x = np.array([[years[len(years) - 1]]])
-            future_y = model.predict([[years[len(years) - 1]]])
+            future_y = model.predict([[years[len(years) - 1] + 1]])
+
+            # print('year:', years[len(years) - 1])
+            # predict_test = model.predict([[2021]])
+            # print(predict_test[0], '2021')
+            # predict_test = model.predict([[2022]])
+            # print(predict_test[0], '2022')
 
             temp[column] = pd.DataFrame(future_y).applymap(format_num)[0][0]
 
             y_pred = model.predict(x)
 
+            # add predict array
             year = years[0]
             count2 = 0
             for o in y_pred:
@@ -162,6 +170,7 @@ def get_predict_by_linear_regression(file):
         temp['year'] = years[len(years) - 1] + 1
         response[count].append(companies[count][1])
         response[count][1].append(temp)
+        predict_temp.append(temp)
         response[count].append(predict_temp)
         count += 1
 
