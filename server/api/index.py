@@ -18,7 +18,7 @@ def predict():
     # get query
     print(request.args.get('type'))
 
-    if request.args.get('type') == 'moving_average':
+    if request.args.get('type') == 'moving-average':
         response = get_predict_by_moving_average(file)
     else:
         response = get_predict_by_linear_regression(file)

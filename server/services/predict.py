@@ -121,6 +121,10 @@ def get_predict_by_linear_regression(file):
         print(sheet)
         response.append([])
         temp = {}
+        predict_temp = []
+        for year in years:
+            predict_temp.append({'year': year})
+
         for column in columns:
             x = sheets[sheet][['year']].values
             y = sheets[sheet][[column]].values
@@ -137,11 +141,20 @@ def get_predict_by_linear_regression(file):
 
             temp[column] = pd.DataFrame(future_y).applymap(format_num)[0][0]
 
-            y_pred = model.predict(x_test)
+            y_pred = model.predict(x)
 
-            mse = mean_squared_error(y_test, y_pred)
-            print(format_num(mse), 'mse')
-            print('r2', model.score(x_test, y_test))
+            year = years[0]
+            count2 = 0
+            for o in y_pred:
+                # print(o[0], 'o')
+                predict_temp[count2][column] = format_num(o[0])
+                count2 += 1
+            # y_pred = model.predict(x_test)
+            # print(f'y_pred ${column}', y_pred)
+
+            # mse = mean_squared_error(y_test, y_pred)
+            # print(format_num(mse), 'mse')
+            # print('r2', model.score(x_test, y_test))
 
             temp[column] = pd.DataFrame(future_y).applymap(format_num)[0][0]
 
@@ -149,12 +162,19 @@ def get_predict_by_linear_regression(file):
         temp['year'] = years[len(years) - 1] + 1
         response[count].append(companies[count][1])
         response[count][1].append(temp)
+        response[count].append(predict_temp)
         count += 1
 
         for i in range(0, len(response)):
             indicators = response[i][1]
             for column in columns_with_year:
                 for j in range(0, len(response[i][1])):
+                    indicators[j][column] = int(np.float64(
+                        indicators[j][column]) if not pd.isna(indicators[j][column]) else -1)
+        for i in range(0, len(response)):
+            indicators = response[i][2]
+            for column in columns_with_year:
+                for j in range(0, len(response[i][2])):
                     indicators[j][column] = int(np.float64(
                         indicators[j][column]) if not pd.isna(indicators[j][column]) else -1)
 
