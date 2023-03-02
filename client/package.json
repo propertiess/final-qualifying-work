@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint ./src --max-warnings=0",
+    "lint": "eslint . --max-warnings=0",
     "test": "jest --watch",
     "format": "prettier --write ./src/**/*.{js,jsx,ts,tsx,css,scss}"
   },

@@ -1,8 +1,8 @@
+import { useEffect, useRef, useState } from 'react';
 import { Breadcrumbs, Center, clsx, Stack, Table, Title } from '@mantine/core';
 import { Line } from '@nivo/line';
 import { useRouter } from 'next/router';
 import ErrorPage from 'pages/404';
-import { useEffect, useRef, useState } from 'react';
 
 import { A } from '@/components';
 import { useGetDataByType } from '@/hooks';
