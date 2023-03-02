@@ -1,7 +1,7 @@
-import { Text } from '@mantine/core';
+import { Breadcrumbs, Text } from '@mantine/core';
 import { useRouter } from 'next/router';
 
-import { TableContainer } from '@/components';
+import { A, TableContainer } from '@/components';
 import { useGetPredict } from '@/hooks';
 import { Layout } from '@/layout';
 import { getCompaniesStore } from '@/store';
@@ -24,6 +24,10 @@ const Companies = () => {
       title={titleDictionary[type]}
       description={`Прогнозы с помощью ${titleDictionary[type]}`}
     >
+      <Breadcrumbs>
+        <A href='/'>Главная</A>
+        <A href='#'>Таблицы - {titleDictionary[type]}</A>
+      </Breadcrumbs>
       {companies.formData ? (
         <TableContainer
           companies={data ?? []}

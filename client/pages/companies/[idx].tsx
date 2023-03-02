@@ -1,8 +1,9 @@
-import { Center, clsx, Stack, Title } from '@mantine/core';
+import { Breadcrumbs, Center, clsx, Stack, Title } from '@mantine/core';
 import { Line } from '@nivo/line';
 import { useRouter } from 'next/router';
 import ErrorPage from 'pages/404';
 
+import { A } from '@/components';
 import { useGetDataByType } from '@/hooks';
 import { Layout } from '@/layout';
 import { Methods } from '@/types';
@@ -24,6 +25,13 @@ const CompanyDetails = () => {
 
   return (
     <Layout title={company[0]} description={`Графики компании ${company[0]}`}>
+      <Breadcrumbs>
+        <A href='/'>Главная</A>
+        <A href={`/companies?type=${type}`}>
+          Таблицы - {titleDictionary[type]}
+        </A>
+        <A href='#'>Графики - {titleDictionary[type]}</A>
+      </Breadcrumbs>
       <Center>
         <Title>
           {company[0]}, {titleDictionary[type]}
