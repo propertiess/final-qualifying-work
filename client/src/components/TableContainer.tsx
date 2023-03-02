@@ -7,11 +7,12 @@ import {
   Table,
   Text
 } from '@mantine/core';
-import Link from 'next/link';
 
 import { Methods, TCompanies } from '@/types';
 import { indicatorDictionary, propIndicator } from '@/utils/consts';
 import { formatCurrency } from '@/utils/helpers';
+
+import { A } from './A';
 
 type Props = {
   companies: TCompanies;
@@ -35,11 +36,9 @@ export const TableContainer = ({ companies, isLoading, details }: Props) => {
                 <Text weight={500} component='span'>
                   Компания {companyName.toUpperCase()}
                 </Text>
-                <Link href={`/companies/${idx}?type=${details}`}>
-                  <Text className='text-[#4dabf7d7] transition-colors hover:text-[#4dabf7]'>
-                    Ознакомиться с графиками
-                  </Text>
-                </Link>
+                <A href={`/companies/${idx}?type=${details}`}>
+                  Ознакомиться с графиками
+                </A>
               </div>
               <Table horizontalSpacing='xl' highlightOnHover>
                 <thead>
