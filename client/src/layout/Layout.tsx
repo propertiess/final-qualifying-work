@@ -56,7 +56,7 @@ export const Layout = ({ title, description, children }: Props) => {
           </Footer>
         }
       >
-        <Stack className='pb-24'>{children}</Stack>
+        <Stack className='pb-40'>{children}</Stack>
       </AppShell>
     </>
   );

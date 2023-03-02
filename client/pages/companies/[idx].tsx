@@ -1,4 +1,4 @@
-import { Breadcrumbs, Center, clsx, Stack, Title } from '@mantine/core';
+import { Breadcrumbs, Center, clsx, Stack, Text, Title } from '@mantine/core';
 import { Line } from '@nivo/line';
 import { useRouter } from 'next/router';
 import ErrorPage from 'pages/404';
@@ -12,6 +12,7 @@ import {
   propIndicator,
   titleDictionary
 } from '@/utils/consts';
+import { calculateMAE, calculateMAPE, calculateMSE } from '@/utils/helpers';
 
 const CompanyDetails = () => {
   const router = useRouter();
@@ -68,6 +69,10 @@ const CompanyDetails = () => {
           predictData.push(predictValue);
         }
 
+        const mse = calculateMSE('y', factData, predictData);
+        const mae = calculateMAE('y', factData, predictData);
+        const mape = calculateMAPE(indicator, company[1], company[2]);
+
         const min =
           Math.min(...factData.map(el => el.y)) >
           Math.min(...predictData.map(el => el.y))
@@ -87,6 +92,9 @@ const CompanyDetails = () => {
             className={clsx('w-full', idx > 1 && 'mt-20')}
           >
             <Title>{indicatorDictionary[indicator]}</Title>
+            <Text>MSE: {mse} млрд.</Text>
+            <Text>MAE: {mae} млрд.</Text>
+            {mape !== -1 && <Text>MAPE: {mape}%</Text>}
             <Center>
               <Line
                 height={500}
