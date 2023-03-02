@@ -15,23 +15,28 @@ import { Menu } from './Menu';
 
 type Props = PropsWithChildren & {
   title: string;
-  description: string;
+  description?: string;
 };
 
 export const Layout = ({ title, description, children }: Props) => {
   const [opened, setOpened] = useState(false);
 
+  const toggleMenu = () => {
+    setOpened(prev => !prev);
+  };
+
   return (
     <>
       <Head>
         <title>{title}</title>
-        <meta name='description' content={description} />
+        {description && <meta name='description' content={description} />}
+        <meta name='robots' content='noindex' />
       </Head>
       <AppShell
         header={
           <Header height={{ base: 50, md: 70 }} p='md'>
             <div className='flex h-full items-center'>
-              <Link href='/'>
+              <Link href='/' onClick={toggleMenu}>
                 <Title className='text-center text-sm sm:text-lg md:text-2xl'>
                   Система прогнозирования
                 </Title>
@@ -40,7 +45,7 @@ export const Layout = ({ title, description, children }: Props) => {
               <MediaQuery largerThan='sm' styles={{ display: 'none' }}>
                 <Burger
                   opened={opened}
-                  onClick={() => setOpened(o => !o)}
+                  onClick={toggleMenu}
                   size='sm'
                   ml='auto'
                   mr='xl'
@@ -49,14 +54,14 @@ export const Layout = ({ title, description, children }: Props) => {
             </div>
           </Header>
         }
-        navbar={<Menu opened={opened} onChange={() => setOpened(o => !o)} />}
+        navbar={<Menu opened={opened} onChange={toggleMenu} />}
         footer={
           <Footer height='auto' p='xs' className='text-center'>
             &copy; 2023
           </Footer>
         }
       >
-        <Stack className='pb-40'>{children}</Stack>
+        <Stack className='pb-20'>{children}</Stack>
       </AppShell>
     </>
   );

@@ -1,7 +1,8 @@
-import { Breadcrumbs, Center, clsx, Stack, Text, Title } from '@mantine/core';
+import { Breadcrumbs, Center, clsx, Stack, Table, Title } from '@mantine/core';
 import { Line } from '@nivo/line';
 import { useRouter } from 'next/router';
 import ErrorPage from 'pages/404';
+import { useEffect, useRef, useState } from 'react';
 
 import { A } from '@/components';
 import { useGetDataByType } from '@/hooks';
@@ -17,10 +18,22 @@ import { calculateMAE, calculateMAPE, calculateMSE } from '@/utils/helpers';
 const CompanyDetails = () => {
   const router = useRouter();
   const type = router.query.type as Methods;
-  const data = useGetDataByType(type);
-  const company = data ? data[+router.query.idx!] : [];
 
-  if (!company?.length) {
+  const data = useGetDataByType(type);
+  const company = data?.[+router.query.idx!] ?? [];
+
+  const [chartWidth, setChartWidth] = useState(500);
+  const stackRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const { width } = stackRef.current?.getBoundingClientRect() ?? {
+      width: 500
+    };
+
+    chartWidth < width && setChartWidth(width);
+  }, []);
+
+  if (!company.length) {
     return <ErrorPage />;
   }
 
@@ -89,16 +102,30 @@ const CompanyDetails = () => {
           <Stack
             key={indicator}
             h={500}
-            className={clsx('w-full', idx > 1 && 'mt-20')}
+            className={clsx('h-fit w-full', idx > 1 && 'mt-2')}
+            ref={stackRef}
           >
             <Title>{indicatorDictionary[indicator]}</Title>
-            <Text>MSE: {mse} млрд.</Text>
-            <Text>MAE: {mae} млрд.</Text>
-            {mape !== -1 && <Text>MAPE: {mape}%</Text>}
+            <Table>
+              <thead>
+                <tr>
+                  <th>MSE</th>
+                  <th>MAE</th>
+                  <th>MAPE</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{mse} млрд.</td>
+                  <td>{mae} млрд.</td>
+                  <td>{mape}%</td>
+                </tr>
+              </tbody>
+            </Table>
             <Center>
               <Line
                 height={500}
-                width={500}
+                width={chartWidth}
                 data={[
                   {
                     id: 'Фактическое значения, млрд.',
