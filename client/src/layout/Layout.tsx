@@ -36,7 +36,16 @@ export const Layout = ({ title, description, children }: Props) => {
         header={
           <Header height={{ base: 50, md: 70 }} p='md'>
             <div className='flex h-full items-center'>
-              <Link href='/' onClick={toggleMenu}>
+              <Link
+                href='/'
+                onClick={() => {
+                  if (!opened) {
+                    return;
+                  }
+
+                  toggleMenu();
+                }}
+              >
                 <Title className='text-center text-sm sm:text-lg md:text-2xl'>
                   Система прогнозирования
                 </Title>
