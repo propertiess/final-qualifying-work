@@ -29,8 +29,11 @@ export const Layout = ({ title, description, children }: Props) => {
     <>
       <Head>
         <title>{title}</title>
-        {description && <meta name='description' content={description} />}
-        <meta name='robots' content='noindex' />
+        {description ? (
+          <meta name='description' content={description} />
+        ) : (
+          <meta name='robots' content='noindex' />
+        )}
       </Head>
       <AppShell
         header={
