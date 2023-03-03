@@ -12,13 +12,13 @@
   },
   "dependencies": {
     "@emotion/react": "^11.10.6",
-    "@mantine/core": "^5.2.5",
-    "@mantine/hooks": "^5.2.5",
-    "@mantine/notifications": "^5.2.5",
+    "@mantine/core": "^5.10.5",
+    "@mantine/hooks": "^5.10.5",
+    "@mantine/notifications": "^5.10.5",
     "@nivo/core": "^0.80.0",
     "@nivo/line": "^0.80.0",
     "@tanstack/react-query": "^4.24.10",
-    "axios": "^1.3.3",
+    "axios": "^1.3.4",
     "mobx": "^6.8.0",
     "mobx-react-lite": "^3.4.0",
     "next": "13.2.3",
@@ -26,7 +26,7 @@
     "react-dom": "18.2.0"
   },
   "devDependencies": {
-    "@propertiess/eslint-config": "^1.0.2",
+    "@propertiess/eslint-config": "^1.0.3",
     "@propertiess/prettier-config": "^1.1.0",
     "@tanstack/react-query-devtools": "^4.24.12",
     "@testing-library/jest-dom": "^5.16.5",
