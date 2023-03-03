@@ -2,14 +2,15 @@ import { PropsWithChildren, useState } from 'react';
 import {
   AppShell,
   Burger,
+  Flex,
   Footer,
   Header,
   MediaQuery,
-  Stack,
-  Title
+  Stack
 } from '@mantine/core';
 import Head from 'next/head';
-import Link from 'next/link';
+
+import { Logo } from '@/components';
 
 import { Menu } from './Menu';
 
@@ -38,22 +39,8 @@ export const Layout = ({ title, description, children }: Props) => {
       <AppShell
         header={
           <Header height={{ base: 50, md: 70 }} p='md'>
-            <div className='flex h-full items-center'>
-              <Link
-                href='/'
-                onClick={() => {
-                  if (!opened) {
-                    return;
-                  }
-
-                  toggleMenu();
-                }}
-              >
-                <Title className='text-center text-sm sm:text-lg md:text-2xl'>
-                  Система прогнозирования
-                </Title>
-              </Link>
-
+            <Flex className='h-full items-center'>
+              <Logo />
               <MediaQuery largerThan='sm' styles={{ display: 'none' }}>
                 <Burger
                   opened={opened}
@@ -63,7 +50,7 @@ export const Layout = ({ title, description, children }: Props) => {
                   mr='xl'
                 />
               </MediaQuery>
-            </div>
+            </Flex>
           </Header>
         }
         navbar={<Menu opened={opened} onChange={toggleMenu} />}
@@ -73,7 +60,7 @@ export const Layout = ({ title, description, children }: Props) => {
           </Footer>
         }
       >
-        <Stack className='pb-20'>{children}</Stack>
+        <Stack className='pl-4 pb-20 md:pl-0'>{children}</Stack>
       </AppShell>
     </>
   );
