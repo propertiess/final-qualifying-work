@@ -1,5 +1,4 @@
 import pandas as pd
-import numpy as np
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
@@ -7,6 +6,7 @@ from sklearn.model_selection import train_test_split
 from utils.format_num import format_num
 from utils.get_initial_data import get_initial_data
 from utils.isExcelFile import isExcelFile
+from utils.normalize_response import normalize_response
 
 
 def get_by_linear_regression(file):
@@ -34,10 +34,10 @@ def get_by_linear_regression(file):
     count = 0
 
     for sheet in sheets:
-        print(sheet)
         response.append([])
         temp = {}
         predict_temp = []
+
         for year in years:
             predict_temp.append({'year': year})
 
@@ -74,16 +74,4 @@ def get_by_linear_regression(file):
         response[count].append(predict_temp)
         count += 1
 
-        for i in range(0, len(response)):
-            indicators = response[i][1]
-            for column in columns_with_year:
-                for j in range(0, len(response[i][1])):
-                    indicators[j][column] = int(np.float64(
-                        indicators[j][column]) if not pd.isna(indicators[j][column]) else -1)
-        for i in range(0, len(response)):
-            indicators = response[i][2]
-            for column in columns_with_year:
-                for j in range(0, len(response[i][2])):
-                    indicators[j][column] = int(np.float64(
-                        indicators[j][column]) if not pd.isna(indicators[j][column]) else -1)
-    return response
+    return normalize_response(response)
