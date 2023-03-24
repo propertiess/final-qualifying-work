@@ -30,52 +30,53 @@ export const TableContainer = ({ companies, isLoading, details }: Props) => {
               <Loader />
             </Center>
           )}
-          {companies.map(([companyName, data], idx) => (
-            <Stack mt='lg' key={companyName}>
-              <div>
-                <Text weight={500} component='span'>
-                  Компания {companyName.toUpperCase()}
-                </Text>
-                <A href={`/companies/${idx}?type=${details}`}>
-                  Ознакомиться с графиками
-                </A>
-              </div>
-              <Table horizontalSpacing='xl' highlightOnHover>
-                <thead>
-                  <tr>
-                    {propIndicator.map(prop => (
-                      <th key={prop}>{indicatorDictionary[prop]}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {data.map((properties, index) => {
-                    return (
-                      <tr key={properties.year}>
-                        {propIndicator.map(prop => {
-                          const style = clsx(
-                            index === data.length - 1 && 'font-bold'
-                          );
-                          if (prop === 'year') {
+          {!!companies.length &&
+            companies.map(([companyName, data], idx) => (
+              <Stack mt='lg' key={companyName}>
+                <div>
+                  <Text weight={500} component='span'>
+                    Компания {companyName.toUpperCase()}
+                  </Text>
+                  <A href={`/companies/${idx}?type=${details}`}>
+                    Ознакомиться с графиками
+                  </A>
+                </div>
+                <Table horizontalSpacing='xl' highlightOnHover>
+                  <thead>
+                    <tr>
+                      {propIndicator.map(prop => (
+                        <th key={prop}>{indicatorDictionary[prop]}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {data.map((properties, index) => {
+                      return (
+                        <tr key={properties.year}>
+                          {propIndicator.map(prop => {
+                            const style = clsx(
+                              index === data.length - 1 && 'font-bold'
+                            );
+                            if (prop === 'year') {
+                              return (
+                                <td key={prop} className={style}>
+                                  {properties[prop]}
+                                </td>
+                              );
+                            }
                             return (
                               <td key={prop} className={style}>
-                                {properties[prop]}
+                                {formatCurrency(properties[prop])}
                               </td>
                             );
-                          }
-                          return (
-                            <td key={prop} className={style}>
-                              {formatCurrency(properties[prop])}
-                            </td>
-                          );
-                        })}
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </Table>
-            </Stack>
-          ))}
+                          })}
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </Table>
+              </Stack>
+            ))}
         </>
       </Stack>
     </ScrollArea>

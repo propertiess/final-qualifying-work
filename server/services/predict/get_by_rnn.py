@@ -5,6 +5,7 @@ import tensorflow as tf
 from utils.normalize_response import normalize_response
 from tensorflow.keras.layers import LSTM, Dense
 from tensorflow.keras.models import Sequential
+from sklearn.preprocessing import MinMaxScaler
 
 from utils.format_num import format_num
 from utils.get_initial_data import get_initial_data
@@ -18,6 +19,9 @@ def get_by_rnn(file):
         sheets[sheet] = pd.DataFrame(sheets[sheet]).fillna(0)
 
     companies = []
+
+    scaler = MinMaxScaler()
+
     for company in sheets:
         length = len(sheets[company]['year'])
         columns_with_year = ['year', 'profit', 'net_profit', 'net_loss']
@@ -49,29 +53,35 @@ def get_by_rnn(file):
             X_train, X_test, y_train, y_test = train_test_split(
                 X, y, test_size=0.2)
 
+            X_train_scaled = scaler.fit_transform(X_train)
+            y_train_scaled = scaler.fit_transform(y_train)
+
+            X_test_scaled = scaler.transform(X_test)
+            y_test_scaled = scaler.transform(y_test)
+
             model = Sequential()
             model.add(LSTM(64, input_shape=(len(years), 1)))
             model.add(Dense(1, activation='linear'))
             model.compile(loss='mean_squared_error', optimizer='adam')
 
-            model.fit(X_train, y_train, epochs=50, batch_size=64,
-                      validation_data=(X_test, y_test))
+            model.fit(X_train_scaled, y_train_scaled, epochs=50, batch_size=64,
+                      validation_data=(X_test_scaled, y_test_scaled))
 
             z = np.array([[years[len(years) - 1] + 1]])
             future_y = model.predict(z)
 
-            temp[column] = pd.DataFrame(future_y).applymap(format_num)[0][0]
+            temp[column] = pd.DataFrame(scaler.inverse_transform(
+                future_y)).applymap(format_num)[0][0]
 
             y_pred = model.predict(X)
 
+            y_pred_unscaled = scaler.inverse_transform(y_pred)
             # add predict array
             year = years[0]
             count2 = 0
-            for o in y_pred:
+            for o in y_pred_unscaled:
                 predict_temp[count2][column] = format_num(o[0])
                 count2 += 1
-
-            temp[column] = pd.DataFrame(future_y).applymap(format_num)[0][0]
 
         response[count].append(sheet)
         temp['year'] = years[len(years) - 1] + 1

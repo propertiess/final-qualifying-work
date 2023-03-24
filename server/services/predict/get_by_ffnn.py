@@ -75,7 +75,6 @@ def get_by_ffnn(file):
                 predict_temp[count2][column] = format_num(o[0])
                 count2 += 1
 
-            temp[column] = pd.DataFrame(future_y).applymap(format_num)[0][0]
 
         response[count].append(sheet)
         temp['year'] = years[len(years) - 1] + 1

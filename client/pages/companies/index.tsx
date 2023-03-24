@@ -29,13 +29,11 @@ const Companies = () => {
         <A href='#'>Таблицы - {titleDictionary[type]}</A>
       </Breadcrumbs>
 
-      {data && (
-        <TableContainer
-          companies={data}
-          isLoading={isFetching}
-          details={type}
-        />
-      )}
+      <TableContainer
+        companies={data ?? []}
+        isLoading={isFetching}
+        details={type}
+      />
     </Layout>
   );
 };

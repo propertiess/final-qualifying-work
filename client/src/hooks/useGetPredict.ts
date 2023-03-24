@@ -20,7 +20,8 @@ export const useGetPredict = (
   return useQuery({
     queryKey: [type, lastModified],
     enabled: !!formData,
-    queryFn: () => PredictService.getByType(formData!, type),
+    queryFn: ({ signal }) =>
+      PredictService.getByType(formData!, type, { signal }),
     staleTime: formData ? Infinity : undefined
   });
 };

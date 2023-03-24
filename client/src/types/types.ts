@@ -14,4 +14,4 @@ export type Link = {
   title: string;
 };
 
-export type Methods = 'moving-average' | 'linear-regression' | 'ffnn';
+export type Methods = 'moving-average' | 'linear-regression' | 'ffnn' | 'rnn';
