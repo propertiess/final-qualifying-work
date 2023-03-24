@@ -2,7 +2,7 @@ from flask_cors import CORS
 from flask import Flask, request, jsonify
 import os
 
-from services.predict import get_predict_by_moving_average, get_predict_by_linear_regression
+from services.predict.predict import Predict
 
 
 app = Flask(__name__)
@@ -12,11 +12,18 @@ CORS(app)
 @app.route('/predict', methods=['POST'])
 def predict():
     file = request.files['file']
+    type = request.args.get('type')
 
-    if request.args.get('type') == 'moving-average':
-        response = get_predict_by_moving_average(file)
-    else:
-        response = get_predict_by_linear_regression(file)
+    if type == 'moving-average':
+        response = Predict.by_moving_average(file)
+    elif type == 'linear-regression':
+        response = Predict.by_linear_regression(file)
+    elif type == 'ffnn':
+        response = Predict.by_ffnn(file)
+    elif type == 'rnn':
+        response = Predict.by_rnn(file)
+    elif type == 'gan':
+        response = Predict.by_gan(file)
 
     return jsonify(response)
 
