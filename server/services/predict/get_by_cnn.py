@@ -1,25 +1,24 @@
 import pandas as pd
 import numpy as np
-from sklearn.model_selection import train_test_split
 import tensorflow as tf
-from utils.normalize_response import normalize_response
 from sklearn.preprocessing import MinMaxScaler
+from sklearn.model_selection import train_test_split
+
 
 from utils.format_num import format_num
 from utils.get_initial_data import get_initial_data
 from utils.isExcelFile import isExcelFile
+from utils.normalize_response import normalize_response
 
 
-def get_by_rnn(file):
+def get_by_cnn(file):
     isExcel = isExcelFile(file.filename)
     sheets, sheet_names, years, columns = get_initial_data(file, isExcel)
+
     for sheet in sheets:
         sheets[sheet] = pd.DataFrame(sheets[sheet]).fillna(0)
 
     companies = []
-
-    scaler = MinMaxScaler()
-
     for company in sheets:
         length = len(sheets[company]['year'])
         columns_with_year = ['year', 'profit', 'net_profit', 'net_loss']
@@ -48,6 +47,16 @@ def get_by_rnn(file):
             X = sheets[sheet][['year']].values
             y = sheets[sheet][[column]].values
 
+            scaler = MinMaxScaler()
+
+            model = tf.keras.models.Sequential([
+                tf.keras.layers.Conv1D(64, kernel_size=1,
+                                       activation='relu', input_shape=(1, 1)),
+                tf.keras.layers.Flatten(),
+                tf.keras.layers.Dense(64, activation='relu'),
+                tf.keras.layers.Dense(1, activation='linear')
+            ])
+
             X_train, X_test, y_train, y_test = train_test_split(
                 X, y, test_size=0.2)
 
@@ -57,23 +66,24 @@ def get_by_rnn(file):
             X_test_scaled = scaler.transform(X_test)
             y_test_scaled = scaler.transform(y_test)
 
-            model = tf.keras.models.Sequential()
-            model.add(tf.keras.layers.LSTM(64, input_shape=(len(years), 1)))
-            model.add(tf.keras.layers.Dense(1, activation='linear'))
-            model.compile(loss='mean_squared_error', optimizer='adam')
+            model.compile(optimizer='adam', loss='mse')
 
-            model.fit(X_train_scaled, y_train_scaled, epochs=50, batch_size=64,
-                      validation_data=(X_test_scaled, y_test_scaled))
+            model.fit(X_train_scaled, y_train_scaled,
+                      epochs=50,
+                      validation_data=(X_test_scaled, y_test_scaled)
+                      )
 
             z = np.array([[years[len(years) - 1] + 1]])
+
             future_y = model.predict(z)
 
-            temp[column] = pd.DataFrame(scaler.inverse_transform(
-                future_y)).applymap(format_num)[0][0]
+            temp[column] = pd.DataFrame(
+                future_y).applymap(format_num)[0][0]
 
             y_pred = model.predict(X)
 
             y_pred_unscaled = scaler.inverse_transform(y_pred)
+
             # add predict array
             year = years[0]
             count2 = 0

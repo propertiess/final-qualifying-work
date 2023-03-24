@@ -22,8 +22,8 @@ def predict():
         response = Predict.by_ffnn(file)
     elif type == 'rnn':
         response = Predict.by_rnn(file)
-    elif type == 'gan':
-        response = Predict.by_gan(file)
+    elif type == 'cnn':
+        response = Predict.by_cnn(file)
 
     return jsonify(response)
 

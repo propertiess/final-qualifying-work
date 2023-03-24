@@ -2,7 +2,7 @@ from services.predict.get_by_moving_average import get_by_moving_average
 from services.predict.get_by_linear_regression import get_by_linear_regression
 from services.predict.get_by_ffnn import get_by_ffnn
 from services.predict.get_by_rnn import get_by_rnn
-from services.predict.get_by_gan import get_by_gan
+from services.predict.get_by_cnn import get_by_cnn
 
 
 class Predict:
@@ -23,5 +23,5 @@ class Predict:
         return get_by_rnn(file)
 
     @staticmethod
-    def by_gan(file):
-        return get_by_gan(file)
+    def by_cnn(file):
+        return get_by_cnn(file)
