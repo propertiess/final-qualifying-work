@@ -17,8 +17,9 @@ export const indicatorDictionary = {
 export const titleDictionary: Record<Methods, string> = {
   'moving-average': 'Метод скользящей средней',
   'linear-regression': 'Линейная регрессия',
-  ffnn: 'ИНС Прямого распространения',
-  rnn: 'Рекуррентные нейронные сети'
+  ffnn: 'Нейронная сеть прямого распространения',
+  rnn: 'Рекуррентная нейронная сеть',
+  cnn: 'Свёрточная нейронная сеть'
 } as const;
 
 export const routes = Object.fromEntries(
