@@ -2,10 +2,10 @@ import { useQuery } from '@tanstack/react-query';
 
 import { queryClient } from '@/../pages/_app';
 import { PredictService } from '@/services';
-import { Methods, TCompanies } from '@/types';
+import { Methods, TCompany } from '@/types';
 
 export const useGetDataByType = (type: Methods) => {
-  const data = queryClient.getQueriesData<TCompanies>([type]);
+  const data = queryClient.getQueriesData<TCompany[]>([type]);
 
   if (!data.length) return [];
 

@@ -13,7 +13,7 @@ import {
   propIndicator,
   titleDictionary
 } from '@/utils/consts';
-import { calculateMAE, calculateMAPE, calculateMSE } from '@/utils/helpers';
+import { getDataForChart } from '@/utils/helpers/get-data-for-chart';
 
 const CompanyDetails = () => {
   const router = useRouter();
@@ -31,6 +31,7 @@ const CompanyDetails = () => {
     };
 
     chartWidth < width && setChartWidth(width);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (!company.length) {
@@ -56,47 +57,8 @@ const CompanyDetails = () => {
           return null;
         }
 
-        const factData = [];
-        const predictData = [];
-
-        for (let i = 0; i < company[1].length; i++) {
-          const factValues = company[1];
-          const predictValues = company[2];
-
-          const predictValue = {
-            x: predictValues[i].year,
-            y: +predictValues[i][indicator] / 1_000_000_000
-          };
-
-          if (i === factValues.length - 1) {
-            predictData.push(predictValue);
-            break;
-          }
-
-          const factValue = {
-            x: factValues[i].year,
-            y: +factValues[i][indicator] / 1_000_000_000
-          };
-
-          factData.push(factValue);
-          predictData.push(predictValue);
-        }
-
-        const mse = calculateMSE('y', factData, predictData);
-        const mae = calculateMAE('y', factData, predictData);
-        const mape = calculateMAPE(indicator, company[1], company[2]);
-
-        const min =
-          Math.min(...factData.map(el => el.y)) >
-          Math.min(...predictData.map(el => el.y))
-            ? Math.min(...predictData.map(el => el.y))
-            : Math.min(...factData.map(el => el.y));
-
-        const max =
-          Math.max(...factData.map(el => el.y)) >
-          Math.max(...predictData.map(el => el.y))
-            ? Math.max(...factData.map(el => el.y))
-            : Math.max(...predictData.map(el => el.y));
+        const { factData, predictData, mae, mse, mape, min, max } =
+          getDataForChart(company, indicator);
 
         return (
           <Stack

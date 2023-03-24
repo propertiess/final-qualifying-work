@@ -5,11 +5,13 @@ export type Indicators = {
   year: number;
 };
 
-export type TCompanies = [string, Indicators[], Indicators[]][];
+export type KeysIndicators = Exclude<keyof Indicators, ''>;
+
+export type TCompany = [string, Indicators[], Indicators[]];
 
 export type Link = {
   href: string;
   title: string;
 };
 
-export type Methods = 'moving-average' | 'linear-regression';
+export type Methods = 'moving-average' | 'linear-regression' | 'ffnn';

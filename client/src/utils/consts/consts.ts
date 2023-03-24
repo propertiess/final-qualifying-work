@@ -1,6 +1,6 @@
-import { Indicators } from '@/types';
+import { KeysIndicators, Methods } from '@/types';
 
-export const propIndicator: Exclude<keyof Indicators, ''>[] = [
+export const propIndicator: KeysIndicators[] = [
   'year',
   'profit',
   'net_profit',
@@ -12,14 +12,14 @@ export const indicatorDictionary = {
   profit: 'Выручка, ₽',
   net_loss: 'Чистый убыток, ₽',
   year: 'Год'
-};
+} as const;
 
-export const routes = {
-  moving_average: 'moving-average',
-  linear_regression: 'linear-regression'
-};
-
-export const titleDictionary = {
+export const titleDictionary: Record<Methods, string> = {
   'moving-average': 'Метод скользящей средней',
-  'linear-regression': 'Линейная регрессия'
-};
+  'linear-regression': 'Линейная регрессия',
+  ffnn: 'ИНС Прямого распространения'
+} as const;
+
+export const routes = Object.fromEntries(
+  Object.keys(titleDictionary).map(key => [key, key])
+) as Record<Methods, Methods>;

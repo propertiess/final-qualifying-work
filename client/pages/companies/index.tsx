@@ -1,4 +1,4 @@
-import { Breadcrumbs, Text } from '@mantine/core';
+import { Breadcrumbs } from '@mantine/core';
 import { useRouter } from 'next/router';
 
 import { A, TableContainer } from '@/components';
@@ -28,16 +28,13 @@ const Companies = () => {
         <A href='/'>Главная</A>
         <A href='#'>Таблицы - {titleDictionary[type]}</A>
       </Breadcrumbs>
-      {companies.formData ? (
+
+      {data && (
         <TableContainer
-          companies={data ?? []}
+          companies={data}
           isLoading={isFetching}
           details={type}
         />
-      ) : (
-        <Text weight='bold' size='lg'>
-          Загрузите файл!
-        </Text>
       )}
     </Layout>
   );

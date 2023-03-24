@@ -1,2 +1,2 @@
-export * from './formatCurrency';
+export * from './format-currency';
 export * from './metrics';

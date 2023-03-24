@@ -8,14 +8,14 @@ import {
   Text
 } from '@mantine/core';
 
-import { Methods, TCompanies } from '@/types';
+import { Methods, TCompany } from '@/types';
 import { indicatorDictionary, propIndicator } from '@/utils/consts';
 import { formatCurrency } from '@/utils/helpers';
 
 import { A } from './A';
 
 type Props = {
-  companies: TCompanies;
+  companies: TCompany[];
   isLoading: boolean;
   details: Methods;
 };

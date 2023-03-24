@@ -1,3 +1,4 @@
+import numpy as np
 import tensorflow as tf
 import pandas as pd
 from sklearn.model_selection import train_test_split
@@ -60,7 +61,8 @@ def get_by_ffnn(file):
             model.fit(X_train, y_train, epochs=100,
                       batch_size=32, validation_data=(X_test, y_test))
 
-            future_y = model.predict([[years[len(years) - 1] + 1]])
+            z = np.array([[years[len(years) - 1] + 1]])
+            future_y = model.predict(z)
 
             temp[column] = pd.DataFrame(future_y).applymap(format_num)[0][0]
 
