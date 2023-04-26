@@ -29,8 +29,8 @@ export const Menu = ({ opened, onChange }: Props) => {
           <Fragment key={link.href}>
             <Link
               className={clsx(
-                'hover:text-opacity-100; mt-3 block rounded-md p-3 text-xl font-medium text-white text-opacity-70 hover:bg-gray-800',
-                router.asPath === link.href && 'bg-gray-800 text-opacity-100'
+                'hover:text-opacity-100; mt-3 block rounded-md p-3 text-xl font-medium text-opacity-70 hover:bg-gray-300',
+                router.asPath === link.href && 'bg-gray-300 text-opacity-100'
               )}
               href={link.href}
               onClick={onChange}

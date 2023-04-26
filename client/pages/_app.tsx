@@ -17,7 +17,7 @@ const App = ({ Component, pageProps }: AppProps) => {
     <MantineProvider
       withGlobalStyles
       withNormalizeCSS
-      theme={{ colorScheme: 'dark' }}
+      // theme={{ colorScheme: 'dark' }}
     >
       <QueryClientProvider client={queryClient}>
         <Component {...pageProps} />

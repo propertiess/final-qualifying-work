@@ -113,11 +113,11 @@ const CompanyDetails = () => {
                 margin={{ top: 10, right: 50, bottom: 100, left: 60 }}
                 pointSize={10}
                 pointBorderWidth={2}
-                theme={{
-                  textColor: 'white'
-                }}
+                // theme={{
+                //   textColor: 'white'
+                // }}
                 axisLeft={{}}
-                colors={{ scheme: 'dark2' }}
+                colors={{ scheme: 'nivo' }}
                 yFormat='>-.2f'
                 useMesh
                 legends={[
