@@ -2,6 +2,8 @@ import { KeysIndicators, TCompany } from '@/types';
 
 import { calculateMAE, calculateMAPE, calculateMSE } from './metrics';
 
+const sizes = ['', 'тыс.', 'млн.', 'млрд.'];
+
 export const getDataForChart = (
   company: TCompany,
   indicator: KeysIndicators
@@ -33,8 +35,11 @@ export const getDataForChart = (
   }
 
   const mse = calculateMSE('y', factData, predictData);
-  const mae = calculateMAE('y', factData, predictData);
+  const mae = calculateMAE(indicator, company[1], company[2]);
   const mape = calculateMAPE(indicator, company[1], company[2]);
+
+  const maeMagnitude = Math.floor(Math.log10(mae) / 3);
+  const maeWithSize = mae.toString().at(0) + ' ' + sizes[maeMagnitude];
 
   const min =
     Math.min(...factData.map(el => el.y)) >
@@ -51,8 +56,8 @@ export const getDataForChart = (
   return {
     factData,
     predictData,
-    mse,
-    mae,
+    mse: `${mse} млрд.`,
+    mae: maeWithSize,
     mape,
     min,
     max

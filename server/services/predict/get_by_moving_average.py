@@ -3,6 +3,7 @@ import numpy as np
 from utils.format_num import format_num
 from utils.get_initial_data import get_initial_data
 from utils.isExcelFile import isExcelFile
+from utils.normalize_response import normalize_response
 
 
 def get_by_moving_average(file):
@@ -82,4 +83,4 @@ def get_by_moving_average(file):
         moving_averages_arr[i].append(temp)
         result[i].append(moving_averages_arr[i])
 
-    return result
+    return normalize_response(result)

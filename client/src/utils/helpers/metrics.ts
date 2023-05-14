@@ -1,4 +1,4 @@
-const calculateError = (errors: number[], length: number) => {
+const calculateError = (errors: number[], length: number, isMAPE = false) => {
   const error =
     errors.reduce((sum, error) => {
       if (Number.isNaN(error)) {
@@ -16,7 +16,11 @@ const calculateError = (errors: number[], length: number) => {
       return sum + error;
     }, 0) / length;
 
-  return error.toFixed(2);
+  if (isMAPE) {
+    return Math.abs(parseFloat(error.toString()));
+  }
+
+  return Math.abs(+error.toFixed(2));
 };
 
 export const calculateMSE = <T>(
@@ -26,7 +30,7 @@ export const calculateMSE = <T>(
 ) => {
   const squaredErrors = factData.map((value, index) => {
     const error = (value[key] as number) - (predictData[index][key] as number);
-    return error ** 2;
+    return Math.pow(error, 2);
   });
 
   return calculateError(squaredErrors, factData.length);
@@ -57,9 +61,13 @@ export const calculateMAPE = <T>(
     return error;
   });
 
-  const output = +(
-    +calculateError(absolutePercentageErrors, factData.length) * 100
-  ).toFixed(2);
+  const output = parseFloat(
+    String(
+      calculateError(absolutePercentageErrors, factData.length, true) * 100
+    )
+  );
 
-  return Math.abs(output);
+  return Math.abs(+output.toFixed(2)) > 100
+    ? 100
+    : Math.abs(+output.toFixed(2));
 };

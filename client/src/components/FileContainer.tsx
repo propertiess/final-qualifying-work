@@ -3,13 +3,13 @@ import { Button, FileInput, Flex } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
 import { observer } from 'mobx-react-lite';
 
-import { getCompaniesStore } from '@/store';
+import { useCompaniesStore } from '@/store';
 import { routes } from '@/utils/consts';
 
 import { A } from './A';
 
 export const FileContainer = observer(() => {
-  const companies = getCompaniesStore();
+  const companies = useCompaniesStore();
 
   const fileInputRef = useRef<HTMLButtonElement>(null);
 

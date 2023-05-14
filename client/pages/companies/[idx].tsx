@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { Breadcrumbs, Center, clsx, Stack, Table, Title } from '@mantine/core';
 import { Line } from '@nivo/line';
+import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
 import ErrorPage from 'pages/404';
 
 import { A } from '@/components';
-import { useGetDataByType } from '@/hooks';
 import { Layout } from '@/layout';
+import { useCompaniesStore } from '@/store';
 import { Methods } from '@/types';
 import {
   indicatorDictionary,
@@ -15,11 +16,14 @@ import {
 } from '@/utils/consts';
 import { getDataForChart } from '@/utils/helpers/get-data-for-chart';
 
-const CompanyDetails = () => {
+const CompanyDetails = observer(() => {
+  const companies = useCompaniesStore();
+
   const router = useRouter();
   const type = router.query.type as Methods;
 
-  const data = useGetDataByType(type);
+  const data = companies.methods[type];
+
   const company = data?.[+router.query.idx!] ?? [];
 
   const [chartWidth, setChartWidth] = useState(500);
@@ -78,9 +82,9 @@ const CompanyDetails = () => {
               </thead>
               <tbody>
                 <tr>
-                  <td>{mse} млрд.</td>
-                  <td>{mae} млрд.</td>
-                  <td>{mape}%</td>
+                  <td>{mse}</td>
+                  <td>{mae}</td>
+                  <td>{mape} %</td>
                 </tr>
               </tbody>
             </Table>
@@ -90,7 +94,7 @@ const CompanyDetails = () => {
                 width={chartWidth}
                 data={[
                   {
-                    id: 'Фактическое значения, млрд.',
+                    id: 'Фактическое значения',
                     color: 'hsl(328, 70%, 50%)',
                     data: factData
                   },
@@ -98,8 +102,8 @@ const CompanyDetails = () => {
                     id: `${
                       type === 'moving-average'
                         ? 'Скользящая средняя'
-                        : 'Предсказанное значение'
-                    }, млрд.`,
+                        : 'Предсказанные значения'
+                    }`,
                     color: 'hsl(324, 70%, 50%)',
                     data: predictData
                   }
@@ -113,11 +117,8 @@ const CompanyDetails = () => {
                 margin={{ top: 10, right: 50, bottom: 100, left: 60 }}
                 pointSize={10}
                 pointBorderWidth={2}
-                // theme={{
-                //   textColor: 'white'
-                // }}
                 axisLeft={{}}
-                colors={{ scheme: 'nivo' }}
+                colors={{ scheme: 'category10' }}
                 yFormat='>-.2f'
                 useMesh
                 legends={[
@@ -151,6 +152,6 @@ const CompanyDetails = () => {
       })}
     </Layout>
   );
-};
+});
 
 export default CompanyDetails;

@@ -1,23 +1,30 @@
+import { useEffect } from 'react';
 import { Breadcrumbs } from '@mantine/core';
+import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
 
 import { A, TableContainer } from '@/components';
-import { useGetPredict } from '@/hooks';
 import { Layout } from '@/layout';
-import { getCompaniesStore } from '@/store';
+import { useCompaniesStore } from '@/store';
 import { Methods } from '@/types';
 import { titleDictionary } from '@/utils/consts';
 
-const Companies = () => {
-  const companies = getCompaniesStore();
+const Companies = observer(() => {
+  const companies = useCompaniesStore();
   const router = useRouter();
   const type = router.query.type as Methods;
 
-  const { data, isFetching } = useGetPredict(
-    type,
-    companies.formData,
-    companies.file?.lastModified
-  );
+  useEffect(() => {
+    if (!type) {
+      return;
+    }
+
+    if (companies.methods[type].length || companies.isLoading[type]) {
+      return;
+    }
+
+    companies.setMethod(type);
+  }, [type, companies]);
 
   return (
     <Layout
@@ -30,12 +37,12 @@ const Companies = () => {
       </Breadcrumbs>
 
       <TableContainer
-        companies={data ?? []}
-        isLoading={isFetching}
+        companies={companies.methods[type] ?? []}
+        isLoading={companies.isLoading[type]}
         details={type}
       />
     </Layout>
   );
-};
+});
 
 export default Companies;

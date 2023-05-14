@@ -1,4 +1,5 @@
 import { PropsWithChildren } from 'react';
+import { Anchor } from '@mantine/core';
 import Link from 'next/link';
 
 type Props = PropsWithChildren & {
@@ -7,11 +8,12 @@ type Props = PropsWithChildren & {
 
 export const A = ({ href, children }: Props) => {
   return (
-    <Link
-      className='block text-[#4dabf7d7] transition-colors duration-300 hover:text-[#4dabf7]'
+    <Anchor
+      component={Link}
+      className='block transition-colors duration-300'
       href={href}
     >
       {children}
-    </Link>
+    </Anchor>
   );
 };
